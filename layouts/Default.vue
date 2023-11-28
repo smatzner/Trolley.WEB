@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NavMobile from "~/layouts/NavMobile.vue";
-import NavDesktop from "~/layouts/NavDesktop.vue";
+import NavMobile from "~/layouts/nav/Mobile.vue";
+import NavDesktop from "~/layouts/nav/Desktop.vue";
 
 const windowWidth = ref()
 
@@ -17,11 +17,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <NavDesktop v-if="windowWidth >= 500"></NavDesktop>
+  <NavDesktop v-if="windowWidth > 960"></NavDesktop>
   <main class="p-4">
       <slot/>
   </main>
-  <NavMobile v-if="windowWidth < 500"></NavMobile>
+<!--  <NavMobile v-if="windowWidth <= 960"></NavMobile>-->
+  <NavMobile/>
 </template>
 
 <style scoped>
