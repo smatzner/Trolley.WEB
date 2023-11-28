@@ -1,14 +1,27 @@
 <script setup lang="ts">
+import NavMobile from "~/layouts/NavMobile.vue";
+import NavDesktop from "~/layouts/NavDesktop.vue";
+
+const windowWidth = ref()
+
+onMounted(() => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth
+    })
+  }
+})
 
 
-import MyDock from "~/layouts/MyDock.vue";
 </script>
 
 <template>
-  <main>
-    <slot/>
+  <NavDesktop v-if="windowWidth >= 500"></NavDesktop>
+  <main class="p-4">
+      <slot/>
   </main>
-  <MyDock></MyDock>
+  <NavMobile v-if="windowWidth < 500"></NavMobile>
 </template>
 
 <style scoped>
