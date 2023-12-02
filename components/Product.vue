@@ -5,24 +5,15 @@ const props = defineProps({
     type: Object
   }
 })
-
-
 </script>
 
 <template>
-  <PrimeButton :style="{backgroundImage: `url(${product.icon})`}"
-               class="bg-trolley-primary m-4 p-0 icon-button text-white justify-center items-end">
-    <span class="text-xs p-2">{{product.subCategoryName}}</span>
+  <PrimeButton v-if="product.isOrganic" class="bg-trolley-primary flex-col text-white aspect-square">
+    <Icon :name="'fa6-solid:'+ product.iconName" class="text-7xl"/>
+    <span class="text-sm mt-2">{{ product.productName }}</span>
   </PrimeButton>
 </template>
 
 <style scoped>
-.icon-button {
-  width: 100px;
-  height: 100px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  //filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(9deg) brightness(106%) contrast(101%);
-}
+
 </style>
