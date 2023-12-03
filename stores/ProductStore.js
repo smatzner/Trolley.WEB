@@ -6,23 +6,40 @@ export const useProductStore = defineStore('product', () => {
     const categories = useState('categories', () => [])
 
     async function loadProducts() {
-        await useFetch('https://localhost:7124/api/product',{
-            onResponse({response}) {
-                products.value = response._data
-            }
-        })
+        const {data} = await useFetch('https://localhost:7124/api/product', {})
+        if (JSON.parse(localStorage.getItem('productsInShoppingList'))) {
+            productsInShoppingList.value = JSON.parse(localStorage.getItem('productsInShoppingList'))
+            getCategories()
+        }
+        products.value = data
     }
 
-    async function loadProductByName(productName){
-        await useFetch('https://localhost:7124/api/product/suche?name='+productName, {
+    async function addProductToShoppingList(productName) {
+        const {data} = await useFetch('https://localhost:7124/api/product/suche?name=' + productName, {
+            transform: (fetchedProducts) => {
+                return fetchedProducts.filter((fetchedProduct, index, self) => {
+                    return index === self.findIndex((product) => (product.productName === fetchedProduct.productName))
+                })
+            },
             onResponse({response}) {
-                productsInShoppingList.value.push(response._data[1])
-                getCategories()
+                /// aufruf shoppinglist controller?
+                // console.log(response._data)
             }
         })
+        productsInShoppingList.value.push(data.value[0])
+        localStorage.setItem('productsInShoppingList', JSON.stringify(productsInShoppingList.value))
+        getCategories()
     }
 
-     function getCategories() {
+    function removeProductFromShoppingList(productId){
+        const productIndex = productsInShoppingList.value.findIndex(product => product.productId === productId)
+        productsInShoppingList.value.splice(productIndex, 1)
+        localStorage.setItem('productsInShoppingList', JSON.stringify(productsInShoppingList.value))
+        getCategories()
+
+    }
+
+    function getCategories() {
         const categoriesMap = new Map()
 
         productsInShoppingList.value.forEach(product => {
@@ -39,6 +56,7 @@ export const useProductStore = defineStore('product', () => {
         productsInShoppingList,
         loadProducts,
         categories,
-        loadProductByName
+        addProductToShoppingList,
+        removeProductFromShoppingList
     }
 })

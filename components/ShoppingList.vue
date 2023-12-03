@@ -9,8 +9,8 @@ const categories = computed(() => productStore.categories)
 <template>
   <PrimeFieldset v-for="category in categories" :legend="category" :toggleable="true" class="mt-3 border-0 shadow-md">
     <div class="grid grid-cols-3 gap-1 fieldset-container">
-      <template v-for="(product,index) in products">
-        <Product v-if="product.productCategoryName == category" :product="product" :index="index"/>
+      <template v-for="product in products">
+        <Product v-if="product.productCategoryName == category" :product="product"/>
       </template>
     </div>
   </PrimeFieldset>

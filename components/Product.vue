@@ -5,10 +5,16 @@ const props = defineProps({
     type: Object
   }
 })
+
+const productStore = useProductStore()
+
+function removeProductFromShoppingList(){
+  productStore.removeProductFromShoppingList(props.product.productId)
+}
 </script>
 
 <template>
-  <PrimeButton v-if="product.isOrganic" class="bg-trolley-primary flex-col text-white aspect-square">
+  <PrimeButton class="bg-trolley-primary flex-col text-white aspect-square" @click="removeProductFromShoppingList()">
     <Icon :name="'fa6-solid:'+ product.iconName" class="text-7xl"/>
     <span class="text-sm mt-2">{{ product.productName }}</span>
   </PrimeButton>

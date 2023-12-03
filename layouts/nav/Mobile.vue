@@ -13,15 +13,10 @@ const userMenuItems = ref([
     route: '/auth/register'
   }
 ])
-
 const visibleSearchField = ref(false)
 const toggle = (e: any) => userMenu.value.toggle(e)
+
 const productStore = useProductStore()
-
-onBeforeMount(async () => {
-  await productStore.loadProducts()
-})
-
 const products = computed(() => productStore.products)
 const selectedProduct = ref()
 const filteredProducts = ref()
@@ -40,11 +35,11 @@ const search = (e: any): any => {
   }, 250)
 }
 
-async function addProductToShoppingList(){
-  if(typeof selectedProduct.value  === 'object'){
+async function addProductToShoppingList() {
+  if (typeof selectedProduct.value === 'object') {
     selectedProduct.value = selectedProduct.value.productName
   }
-  useAsyncData(async () => await productStore.loadProductByName(selectedProduct.value))
+  useAsyncData(async () => await productStore.addProductToShoppingList(selectedProduct.value))
   selectedProduct.value = ''
 }
 
@@ -53,11 +48,11 @@ async function addProductToShoppingList(){
 <template>
   <PrimeToolbar class="fixed bottom-0 w-full rounded-t-2xl menubar-shadow bg-white">
     <template #start>
-      <PrimeButton text rounded severity="secondary" aria-label="Einstellungen" class="place-content-center w-20">
-        <NuxtLink to="/settings">
+      <NuxtLink to="/settings">
+        <PrimeButton text rounded severity="secondary" aria-label="Einstellungen" class="place-content-center w-20">
           <Icon name="fa6-solid:gear" class="text-lg"></Icon>
-        </NuxtLink>
-      </PrimeButton>
+        </PrimeButton>
+      </NuxtLink>
     </template>
     <template #center>
       <PrimeButton text rounded severity="secondary" aria-label="Suche" class="place-content-center w-20"
@@ -78,10 +73,12 @@ async function addProductToShoppingList(){
     </template>
   </PrimeToolbar>
 
-  <PrimeSidebar v-model:visible="visibleSearchField" header="Produkt hinzufügen" position="bottom" class="h-1/3 rounded-t-2xl">
+  <PrimeSidebar v-model:visible="visibleSearchField" header="Produkt hinzufügen" position="bottom"
+                class="h-1/3 rounded-t-2xl">
     <div class="flex justify-center">
       <form @submit.prevent="addProductToShoppingList()" class="flex flex-column gap-2">
-        <PrimeAutoComplete v-model="selectedProduct" optionLabel="productName" :suggestions="filteredProducts" @complete="search" placeholder="Produkt suchen" inputClass="text-sm"/>
+        <PrimeAutoComplete v-model="selectedProduct" optionLabel="productName" :suggestions="filteredProducts"
+                           @complete="search" placeholder="Produkt suchen" inputClass="text-sm"/>
         <PrimeButton type="submit" label="Hinzufügen" class="bg-trolley-primary" size="small"/>
       </form>
     </div>
