@@ -1,11 +1,9 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'auth'
-})
+
 </script>
 
 <template>
-<h1>Register</h1>
+<slot/>
 </template>
 
 <style scoped>
