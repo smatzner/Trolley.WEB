@@ -9,11 +9,14 @@ export const useAuthStore = defineStore('auth', {
         token: null,
     }),
     actions: {
-        async register(username, email, password) {
+        async register(username, password) {
             try {
                 const { data, error } = await useFetch(`${AUTH_API_URL}Register`, {
                     method: 'POST',
-                    body: JSON.stringify({ Username: username, Email: email, Password: password }),
+                    body: JSON.stringify({ username, password }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 });
 
                 if (error.value) {
@@ -31,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const { data, error } = await useFetch(`${AUTH_API_URL}Login`, {
                     method: 'POST',
-                    body: JSON.stringify({ Username: username, Password: password }),
+                    body: JSON.stringify({ username, password }),
                     headers: {
                         'Content-Type': 'application/json'
                     }

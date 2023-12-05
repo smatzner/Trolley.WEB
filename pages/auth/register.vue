@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import Registration from '~/components/Registration.vue';
+
 definePageMeta({
   layout: 'auth'
 })
 </script>
 
 <template>
-<h1>Register</h1>
+<Registration/>
 </template>
 
 <style scoped>
