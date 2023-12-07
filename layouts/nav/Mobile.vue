@@ -39,7 +39,7 @@ async function addProductToShoppingList() {
   if (typeof selectedProduct.value === 'object') {
     selectedProduct.value = selectedProduct.value.productName
   }
-  useAsyncData(async () => await productStore.addProductToShoppingList(selectedProduct.value))
+  useAsyncData(async () => await productStore.addProductToShoppingList(selectedProduct.value,1))
   selectedProduct.value = ''
 }
 

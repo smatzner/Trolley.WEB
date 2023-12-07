@@ -1,42 +1,77 @@
-import {useFetch} from "#app";
-
 export const useProductStore = defineStore('product', () => {
     const products = useState('products', () => [])
     const productsInShoppingList = useState('productsInShoppingList', () => [])
     const categories = useState('categories', () => [])
+    const shoppingList = useState('shoppingList', () => [])
+    const costsPerMarket = useState('costsPerMarket', () => [
+        {"marketName": "Billa", "totalPrice": 0},
+        {"marketName": "Spar", "totalPrice": 0},
+        {"marketName": "Hofer", "totalPrice": 0}
+    ])
 
     async function loadProducts() {
-        const {data} = await useFetch('https://localhost:7124/api/product', {})
-        if (JSON.parse(localStorage.getItem('productsInShoppingList'))) {
-            productsInShoppingList.value = JSON.parse(localStorage.getItem('productsInShoppingList'))
+        await new Promise((resolve, reject) => {
+            useFetch('https://localhost:7124/api/product', {
+                onResponse({response}) {
+                    products.value = response._data
+                    console.log(products.value)
+                    resolve()
+                },
+                onError(error) {
+                    reject(error)
+                }
+            })
+        })
+
+        if (JSON.parse(localStorage.getItem('shoppingList'))) {
+            shoppingList.value = JSON.parse(localStorage.getItem('shoppingList'))
+            shoppingList.value.forEach(productInShoppingList => {
+                productsInShoppingList.value.push(products.value.find(product => product.productId === productInShoppingList.productId ?? product))
+            })
             getCategories()
+            await AddProductsAndCalculateList(shoppingList.value)
         }
-        products.value = data
     }
 
-    async function addProductToShoppingList(productName) {
+    async function addProductToShoppingList(productName, productAmount) {
         const {data} = await useFetch('https://localhost:7124/api/product/suche?name=' + productName, {
             transform: (fetchedProducts) => {
                 return fetchedProducts.filter((fetchedProduct, index, self) => {
                     return index === self.findIndex((product) => (product.productName === fetchedProduct.productName))
                 })
-            },
-            onResponse({response}) {
-                /// aufruf shoppinglist controller?
-                // console.log(response._data)
             }
         })
+        // const {data} = await useFetch('/api/product/suche?name=' + productName,{
+        //         transform: (fetchedProducts) => {
+        //             return fetchedProducts.filter((fetchedProduct, index, self) => {
+        //                 return index === self.findIndex((product) => (product.productName === fetchedProduct.productName))
+        //             })
+        //         },
+        //         onResponse({response}) {
+        //             /// aufruf shoppinglist controller?
+        //             // console.log(response._data)
+        //         }
+        // })
+
         productsInShoppingList.value.push(data.value[0])
-        localStorage.setItem('productsInShoppingList', JSON.stringify(productsInShoppingList.value))
+
+        shoppingList.value.push({productId: data.value[0].productId, amount: productAmount})
+        localStorage.setItem('shoppingList', JSON.stringify(shoppingList.value))
+
+        await AddProductsAndCalculateList(shoppingList.value)
+
         getCategories()
     }
 
-    function removeProductFromShoppingList(productId){
+    async function removeProductFromShoppingList(productId) {
         const productIndex = productsInShoppingList.value.findIndex(product => product.productId === productId)
-        productsInShoppingList.value.splice(productIndex, 1)
-        localStorage.setItem('productsInShoppingList', JSON.stringify(productsInShoppingList.value))
-        getCategories()
 
+        productsInShoppingList.value.splice(productIndex, 1)
+        shoppingList.value.splice(productIndex,1)
+        localStorage.setItem('shoppingList', JSON.stringify(shoppingList.value))
+
+        getCategories()
+        await AddProductsAndCalculateList(shoppingList.value)
     }
 
     function getCategories() {
@@ -51,11 +86,21 @@ export const useProductStore = defineStore('product', () => {
             .map(categoryId => categoriesMap.get(categoryId));
     }
 
+    async function AddProductsAndCalculateList(products) {
+        const {data} = await useFetch('https://localhost:7124/api/TemporaryShoppingList/AddProductAndCalculateList', {
+            method: 'POST',
+            body: `{"items":${JSON.stringify(products)}}`,
+        })
+        costsPerMarket.value = data
+    }
+
     return {
         products,
         productsInShoppingList,
-        loadProducts,
         categories,
+        costsPerMarket,
+        shoppingList,
+        loadProducts,
         addProductToShoppingList,
         removeProductFromShoppingList
     }
