@@ -25,7 +25,9 @@ export const useProductStore = defineStore('product', () => {
         if (JSON.parse(localStorage.getItem('shoppingList'))) {
             shoppingList.value = JSON.parse(localStorage.getItem('shoppingList'))
             shoppingList.value.forEach(productInShoppingList => {
-                productsInShoppingList.value.push(products.value.find(product => product.productId === productInShoppingList.productId ?? product))
+                console.log(productInShoppingList.amount)
+                const matchingProduct = products.value.find(product => product.productId === productInShoppingList.productId ?? product)
+                productsInShoppingList.value.push({...matchingProduct, amount: productInShoppingList.amount})
             })
             getCategories()
             await AddProductsAndCalculateList(shoppingList.value)
@@ -51,8 +53,9 @@ export const useProductStore = defineStore('product', () => {
         //             // console.log(response._data)
         //         }
         // })
-
-        productsInShoppingList.value.push(data.value[0])
+        console.log(data.value[0])
+        productsInShoppingList.value.push({...data.value[0],amount: productAmount})
+        console.log(productsInShoppingList.value)
 
         shoppingList.value.push({productId: data.value[0].productId, amount: productAmount})
         localStorage.setItem('shoppingList', JSON.stringify(shoppingList.value))

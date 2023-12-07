@@ -56,9 +56,6 @@ function updatePrice() {
     </template>
     <template #item="slotProps">
       <PrimeInputGroup>
-        <PrimeButton>
-          <Icon :name="slotProps.item.icon"/>
-        </PrimeButton>
         <PrimeDropdown label="Spar" v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-40"
                        :options="marketItems"
                        optionLabel="marketName" text rounded raised></PrimeDropdown>
