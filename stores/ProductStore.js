@@ -14,7 +14,6 @@ export const useProductStore = defineStore('product', () => {
             useFetch('https://localhost:7124/api/product', {
                 onResponse({response}) {
                     products.value = response._data
-                    console.log(products.value)
                     resolve()
                 },
                 onError(error) {
@@ -34,7 +33,7 @@ export const useProductStore = defineStore('product', () => {
     }
 
     async function addProductToShoppingList(productName, productAmount) {
-        const {data} = await useFetch('https://localhost:7124/api/product/suche?name=' + productName, {
+        const {data} = await useFetch('https://localhost:7124/api/product/search?name=' + productName, {
             transform: (fetchedProducts) => {
                 return fetchedProducts.filter((fetchedProduct, index, self) => {
                     return index === self.findIndex((product) => (product.productName === fetchedProduct.productName))
@@ -89,7 +88,7 @@ export const useProductStore = defineStore('product', () => {
     async function AddProductsAndCalculateList(products) {
         const {data} = await useFetch('https://localhost:7124/api/TemporaryShoppingList/AddProductAndCalculateList', {
             method: 'POST',
-            body: `{"items":${JSON.stringify(products)}}`,
+            body: JSON.stringify(products),
         })
         costsPerMarket.value = data
     }
