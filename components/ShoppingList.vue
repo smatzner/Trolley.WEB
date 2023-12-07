@@ -9,9 +9,14 @@ const marketItems = ref(costsPerMarket.value.map(market => ({marketName: market.
 const selectedMarket = ref()
 const totalPrice = ref(0)
 
-watch(costsPerMarket,  () => {
-  selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
-  totalPrice.value = Math.round(costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).totalPrice * 100) / 100
+watch(costsPerMarket, () => {
+  if (costsPerMarket.value.length > 0) {
+    selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
+    totalPrice.value = Math.round(costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).totalPrice * 100) / 100
+  } else {
+    selectedMarket.value = ''
+    totalPrice.value = 0
+  }
 })
 
 
@@ -29,7 +34,7 @@ function updatePrice() {
       totalPrice.value = Math.round(market.totalPrice * 100) / 100
     }
   })
-  }
+}
 
 </script>
 
@@ -54,7 +59,8 @@ function updatePrice() {
         <PrimeButton>
           <Icon :name="slotProps.item.icon"/>
         </PrimeButton>
-        <PrimeDropdown label="Spar" v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-40" :options="marketItems"
+        <PrimeDropdown label="Spar" v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-40"
+                       :options="marketItems"
                        optionLabel="marketName" text rounded raised></PrimeDropdown>
         <PrimeInputGroupAddon>{{ totalPrice }} €</PrimeInputGroupAddon>
       </PrimeInputGroup>
