@@ -2,23 +2,26 @@
 import { ref, computed } from 'vue';
 import { useAuthStore } from '@/stores/AuthStore'; // Importiere den AuthStore
 import ProductSearch from "~/components/ProductSearch.vue";
+import Menu from 'primevue/menu';
 
 const authStore = useAuthStore();
 const userMenu = ref();
 const router = useRouter();
 
 const logout = () => {
-    authStore.logout();
-    router.push('/'); // Optional: Leite den Benutzer nach dem Logout um
+  authStore.logout();
+  router.push('/'); // Optional: Leite den Benutzer nach dem Logout um
 };
 
 const userMenuItems = computed(() => {
   return authStore.isLoggedIn
-    ? [{ label: 'Logout', command: logout }]
+    ? [{ label: 'Logout', command: logout }, { separator: true },
+    { label: 'Einstellungen', route: '/settings' }
+    ]
     : [
-        { label: 'Login', route: '/auth/login' },
-        { label: 'Registrieren', route: '/auth/register' }
-      ];
+      { label: 'Login', route: '/auth/login' }, { separator: true },
+      { label: 'Registrieren', route: '/auth/register' }
+    ];
 });
 
 
