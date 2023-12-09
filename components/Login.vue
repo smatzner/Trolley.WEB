@@ -9,15 +9,22 @@ const username = ref('');
 const password = ref('');
 const authStore = useAuthStore();
 const router = useRouter();
+const userErrorMessage = ref('');
+
 
 const login = async () => {
     try {
         await authStore.login(username.value, password.value);
         router.push('/');
     } catch (error) {
-        console.error(error.message);
+        console.error('Login-Fehler:', error);
+    } if (error.message.includes('400')) {
+        userErrorMessage.value = 'Login fehlgeschlagen: Benutzername oder Daten ungültig.';
+    } else {
+        userErrorMessage.value = 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.';
     }
-}
+};
+
 </script>
 
 <template>
@@ -31,6 +38,4 @@ const login = async () => {
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

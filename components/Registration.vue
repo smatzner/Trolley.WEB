@@ -9,13 +9,19 @@ const username = ref('');
 const password = ref('');
 const authStore = useAuthStore();
 const router = useRouter();
+const userErrorMessage = ref('');
 
 const register = async () => {
     try {
         await authStore.register(username.value, password.value);
-        router.push('/auth/login');
+        router.push('/');
     } catch (error) {
         console.error(error.message);
+        if (error.message.includes('400')) {
+            userErrorMessage.value = 'Registrierung fehlgeschlagen: Benutzername oder Daten ungültig.';
+        } else {
+            userErrorMessage.value = 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.';
+        }
     }
 };
 </script>
@@ -27,10 +33,9 @@ const register = async () => {
             <InputText v-model="username" placeholder="E-Mail" />
             <InputText v-model="password" type="password" placeholder="Passwort" />
             <Button label="Registrieren" type="submit" />
+            <p v-if="userErrorMessage" class="error-message">{{ userErrorMessage }}</p>
         </form>
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

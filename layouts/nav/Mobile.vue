@@ -1,22 +1,29 @@
 <script setup lang="ts">
-
-import {useAsyncData} from "#app";
+import { ref, computed } from 'vue';
+import { useAuthStore } from '@/stores/AuthStore'; // Importiere den AuthStore
 import ProductSearch from "~/components/ProductSearch.vue";
 
-const userMenu = ref()
-const userMenuItems = ref([
-  {
-    label: 'Login',
-    route: '/auth/login'
-  },
-  {
-    label: 'Registrieren',
-    route: '/auth/register'
-  }
-])
-const toggle = (e: any) => userMenu.value.toggle(e)
+const authStore = useAuthStore();
+const userMenu = ref();
+const router = useRouter();
 
-const visibleSearchField = ref(false)
+const logout = () => {
+    authStore.logout();
+    router.push('/'); // Optional: Leite den Benutzer nach dem Logout um
+};
+
+const userMenuItems = computed(() => {
+  return authStore.isLoggedIn
+    ? [{ label: 'Logout', command: logout }]
+    : [
+        { label: 'Login', route: '/auth/login' },
+        { label: 'Registrieren', route: '/auth/register' }
+      ];
+});
+
+
+const toggle = (e: any) => userMenu.value.toggle(e);
+const visibleSearchField = ref(false);
 </script>
 
 <template>
@@ -30,24 +37,25 @@ const visibleSearchField = ref(false)
     </template>
     <template #center>
       <PrimeButton text rounded severity="secondary" aria-label="Suche" class="place-content-center w-20"
-                   @click="visibleSearchField = true">
+        @click="visibleSearchField = true">
         <Icon name="fa6-solid:magnifying-glass" class="text-lg"></Icon>
       </PrimeButton>
     </template>
     <template #end>
       <PrimeButton text rounded severity="secondary" @click="toggle" aria-haspopup="true" aria-controls="userMenu"
-                   aria-label="User" class="place-content-center w-20">
+        aria-label="User" class="place-content-center w-20">
         <Icon name="fa6-solid:user" class="text-lg"></Icon>
       </PrimeButton>
       <PrimeMenu ref="userMenu" id="userMenu" :model="userMenuItems" :popup="true">
-        <template #item="{item}">
-          <NuxtLink :to="item.route">{{ item.label }}</NuxtLink>
+        <template #item="{ item }">
+          <button v-if="item.label === 'Logout'" @click="logout">{{ item.label }}</button>
+          <NuxtLink v-else :to="item.route">{{ item.label }}</NuxtLink>
         </template>
       </PrimeMenu>
     </template>
   </PrimeToolbar>
 
-  <ProductSearch v-model:visible="visibleSearchField"/>
+  <ProductSearch v-model:visible="visibleSearchField" />
 </template>
 
 <style scoped>
