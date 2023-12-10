@@ -9,6 +9,9 @@ const marketItems = ref(costsPerMarket.value.map(market => ({marketName: market.
 const selectedMarket = ref()
 const totalPrice = ref(0)
 
+const authStore = useAuthStore()
+const isLoggedIn = computed(() => authStore.isLoggedIn)
+
 watch(costsPerMarket, () => {
   if (costsPerMarket.value.length > 0) {
     selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
@@ -22,8 +25,10 @@ watch(costsPerMarket, () => {
 
 const items = ref([
   {
-    label: 'check',
-    icon: 'fa6-solid:check',
+    label: 'Gesamtkosten',
+  },
+  {
+    label: 'Einkaufsliste speichern'
   }
 ])
 
@@ -54,13 +59,16 @@ function updatePrice() {
     <template #icon>
       <Icon name="fa6-solid:cart-shopping"/>
     </template>
-    <template #item="slotProps">
-      <PrimeInputGroup>
-        <PrimeDropdown label="Spar" v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-40"
+    <template #item="{item}">
+      <PrimeInputGroup v-if="item.label === 'Gesamtkosten'">
+        <PrimeDropdown v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-40"
                        :options="marketItems"
                        optionLabel="marketName" text rounded raised></PrimeDropdown>
         <PrimeInputGroupAddon>{{ totalPrice }} €</PrimeInputGroupAddon>
       </PrimeInputGroup>
+      <PrimeButton v-if="item.label === 'Einkaufsliste speichern' && isLoggedIn" class="bg-trolley-primary border-trolley-primary">
+        <Icon name="fa6-solid:floppy-disk"/>
+      </PrimeButton>
     </template>
   </PrimeSpeedDial>
 </template>
