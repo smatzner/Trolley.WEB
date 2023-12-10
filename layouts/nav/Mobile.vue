@@ -16,7 +16,7 @@ const logout = () => {
 const userMenuItems = computed(() => {
   return authStore.isLoggedIn
     ? [{ label: 'Logout', command: logout }, { separator: true },
-    { label: 'Einstellungen', route: '/settings' }
+    { label: 'User Profil', route: '/user' }
     ]
     : [
       { label: 'Login', route: '/auth/login' }, { separator: true },

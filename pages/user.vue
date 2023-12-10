@@ -3,7 +3,8 @@
 </script>
 
 <template>
-<h1>Einstellungen</h1>
+<h1>userpanel</h1>
+
 </template>
 
 <style scoped>

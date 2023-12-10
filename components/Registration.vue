@@ -31,7 +31,22 @@ const register = async () => {
         <h2>Registrierung</h2>
         <form @submit.prevent="register">
             <InputText v-model="username" placeholder="E-Mail" />
-            <InputText v-model="password" type="password" placeholder="Passwort" />
+            <PrimePassword v-model="password">
+                <template #header>
+                    <h6>Pick a password</h6>
+                </template>
+                <template #footer>
+                    <Divider />
+                    <p class="mt-2">Suggestions</p>
+                    <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                        <li>At least one lowercase</li>
+                        <li>At least one uppercase</li>
+                        <li>At least one numeric</li>
+                        <li>Minimum 8 characters</li>
+                    </ul>
+                </template>
+            </PrimePassword>
+
             <Button label="Registrieren" type="submit" />
             <p v-if="userErrorMessage" class="error-message">{{ userErrorMessage }}</p>
         </form>
