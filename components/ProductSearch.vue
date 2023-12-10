@@ -24,12 +24,30 @@ const organic = ref(false)
 const discount = ref(false)
 const amount = ref(1)
 
+watch(organic,() => {if(organic.value) discount.value = false})
+watch(discount,() => {if(discount.value) organic.value = false})
+
+const shoppingListProduct = ref({
+  productName: '',
+  isDiscountProduct: false,
+  isOrganic: false,
+  amount: 0,
+})
+
 async function addProductToShoppingList() {
   if (typeof selectedProduct.value === 'object') {
     selectedProduct.value = selectedProduct.value.productName
   }
-  useAsyncData(async () => await productStore.addProductToShoppingList(selectedProduct.value, amount.value))
+  shoppingListProduct.value = {
+    productName: selectedProduct.value,
+    isDiscountProduct: discount.value,
+    isOrganic: organic.value,
+    amount: amount.value
+  }
+  // useAsyncData(async () => await productStore.addProductToShoppingList(selectedProduct.value, amount.value))
+  useAsyncData(async () => await productStore.addProductToShoppingList(shoppingListProduct.value))
   selectedProduct.value = ''
+  amount.value = 1
 }
 </script>
 
@@ -50,13 +68,13 @@ async function addProductToShoppingList() {
 
         <div class="flex flex-col items-start mx-auto w-1/3 mt-3 gap-2">
           <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" value="" class="sr-only peer" :checked="organic">
+            <input type="checkbox" value="" class="sr-only peer" v-model="organic">
             <div
                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-trolley-primary"></div>
             <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Bio</span>
           </label>
           <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" value="" class="sr-only peer" :checked="discount">
+            <input type="checkbox" value="" class="sr-only peer" v-model="discount">
             <div
                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-trolley-primary"></div>
             <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Diskonter</span>
