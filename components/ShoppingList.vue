@@ -12,6 +12,13 @@ const totalPrice = ref(0)
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
 
+const shoppingListStore = useShoppingListStore()
+const visibleDialog = ref(false)
+const shoppingListName = ref({
+  name: ''
+})
+
+
 watch(costsPerMarket, () => {
   if (costsPerMarket.value.length > 0) {
     selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
@@ -22,7 +29,6 @@ watch(costsPerMarket, () => {
   }
 })
 
-
 const items = ref([
   {
     label: 'Gesamtkosten',
@@ -31,6 +37,10 @@ const items = ref([
     label: 'Einkaufsliste speichern'
   }
 ])
+
+async function saveShoppingList() {
+  await shoppingListStore.saveShoppingList(productStore.shoppingList, shoppingListName.value)
+}
 
 function updatePrice() {
   console.log(selectedMarket.value)
@@ -61,16 +71,26 @@ function updatePrice() {
     </template>
     <template #item="{item}">
       <PrimeInputGroup v-if="item.label === 'Gesamtkosten'">
-        <PrimeDropdown v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-40"
+        <PrimeDropdown v-model="selectedMarket" optionValue="marketName" @change="updatePrice" class="w-32"
                        :options="marketItems"
                        optionLabel="marketName" text rounded raised></PrimeDropdown>
         <PrimeInputGroupAddon>{{ totalPrice }} €</PrimeInputGroupAddon>
       </PrimeInputGroup>
-      <PrimeButton v-if="item.label === 'Einkaufsliste speichern' && isLoggedIn" class="bg-trolley-primary border-trolley-primary">
+      <PrimeButton v-if="item.label === 'Einkaufsliste speichern' && isLoggedIn && productsInShoppingList.length > 0" @click="visibleDialog = true"
+                   class="bg-trolley-primary border-trolley-primary">
         <Icon name="fa6-solid:floppy-disk"/>
       </PrimeButton>
     </template>
   </PrimeSpeedDial>
+
+  <PrimeDialog v-model:visible="visibleDialog" modal dismissableMask header="Einkaufsliste speichern" class="m-4">
+    <form @submit.prevent="saveShoppingList()">
+      <PrimeInputText class="w-48 h-12" v-model="shoppingListName.name" placeholder="Bezeichnung"/>
+      <PrimeButton type="submit" class="ms-3 h-12 bg-trolley-primary border-trolley-primary">
+        <Icon name="fa6-solid:floppy-disk"/>
+      </PrimeButton>
+    </form>
+  </PrimeDialog>
 </template>
 
 <style scoped>

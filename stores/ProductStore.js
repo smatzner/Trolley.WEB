@@ -1,4 +1,7 @@
 export const useProductStore = defineStore('product', () => {
+
+        const BASE_URL = 'https://localhost:7124'
+
         const products = useState('products', () => [])
         const productsInShoppingList = useState('productsInShoppingList', () => [])
         const categories = useState('categories', () => [])
@@ -11,7 +14,7 @@ export const useProductStore = defineStore('product', () => {
 
         async function loadProducts() {
             await new Promise((resolve, reject) => {
-                useFetch('https://localhost:7124/api/product', {
+                useFetch(BASE_URL + '/api/product', {
                     onResponse({response}) {
                         products.value = response._data
                         resolve()
@@ -23,6 +26,7 @@ export const useProductStore = defineStore('product', () => {
             })
 
             if (JSON.parse(localStorage.getItem('shoppingList'))) {
+                productsInShoppingList.value = []
                 shoppingList.value = JSON.parse(localStorage.getItem('shoppingList'))
                 shoppingList.value.forEach(productInShoppingList => {
                     const matchingProduct = products.value.find(product => product.productId === productInShoppingList.productId ?? product)
@@ -36,7 +40,7 @@ export const useProductStore = defineStore('product', () => {
         async function addProductToShoppingList(shoppingListProduct) {
             try {
                 await new Promise((resolve) => {
-                    useFetch('https://localhost:7124/api/product/search?name=' + shoppingListProduct.productName, {
+                    useFetch(BASE_URL + '/api/product/search?name=' + shoppingListProduct.productName, {
                         onResponse({response}) {
                             const fetchedProduct = response._data.find(fetchedProduct => {
                                 return (
@@ -116,7 +120,7 @@ export const useProductStore = defineStore('product', () => {
         }
 
         async function AddProductsAndCalculateList(products) {
-            const {data} = await useFetch('https://localhost:7124/api/TemporaryShoppingList/AddProductAndCalculateList', {
+            const {data} = await useFetch(BASE_URL + '/api/TemporaryShoppingList/AddProductAndCalculateList', {
                 method: 'POST',
                 body: JSON.stringify(products),
             })
