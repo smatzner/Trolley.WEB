@@ -85,8 +85,6 @@ export const useProductStore = defineStore('product', () => {
         async function updateProductFromShoppingList(updatedProduct){
             const productIndex = productsInShoppingList.value.findIndex(product => product.productId === updatedProduct.productId)
 
-            console.log(updatedProduct)
-
             productsInShoppingList.value.splice(productIndex, 1)
             shoppingList.value.splice(productIndex, 1)
 

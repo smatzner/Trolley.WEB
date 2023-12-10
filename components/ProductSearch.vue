@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {useAsyncData} from "#app";
 
 const productStore = useProductStore()
 const products = computed(() => productStore.products)

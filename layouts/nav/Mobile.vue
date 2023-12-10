@@ -50,15 +50,17 @@ const visibleSearchField = ref(false);
         <Icon name="fa6-solid:user" class="text-lg"></Icon>
       </PrimeButton>
       <PrimeMenu ref="userMenu" id="userMenu" :model="userMenuItems" :popup="true">
-        <template #item="{ item }">
-          <button v-if="item.label === 'Logout'" @click="logout">{{ item.label }}</button>
-          <NuxtLink v-else :to="item.route">{{ item.label }}</NuxtLink>
+        <template #item="{ item, props }">
+          <div v-bind="props.action">
+            <button v-if="item.label === 'Logout'" @click="logout">{{ item.label }}</button>
+            <NuxtLink v-else :to="item.route">{{ item.label }}</NuxtLink>
+          </div>
         </template>
       </PrimeMenu>
     </template>
   </PrimeToolbar>
 
-  <ProductSearch v-model:visible="visibleSearchField" />
+  <ProductSearch v-model:visible="visibleSearchField"/>
 </template>
 
 <style scoped>
