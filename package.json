@@ -20,6 +20,10 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "primevue": "^3.38.0"
+    "@stripe/stripe-js": "^2.2.1",
+    "dotenv": "^16.3.1",
+    "nuxt-stripe-module": "^3.2.0",
+    "primevue": "^3.38.0",
+    "stripe": "^14.8.0"
   }
 }

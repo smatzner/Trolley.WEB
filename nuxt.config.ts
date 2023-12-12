@@ -1,11 +1,16 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     app: {
         head: {
-            title: "Trolley"
+            title: "Trolley",
+            script: [{ src: "https://js.stripe.com/v3/", defer: true }],
         }
     },
-    devtools: {enabled: true},
+    runtimeConfig: {
+        public: {
+            stripePk: process.env.STRIPE_PUBLIC_KEY,
+        },
+    },
+    devtools: { enabled: true },
     modules: ["@pinia/nuxt", "@nuxtjs/tailwindcss", "nuxt-primevue", "nuxt-icon"],
     primevue: {
         components: {
@@ -14,6 +19,7 @@ export default defineNuxtConfig({
         },
         cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
     },
+
     css: ['primevue/resources/themes/lara-light-blue/theme.css'],
     plugins: ['~/plugins/auth.js']
 })
