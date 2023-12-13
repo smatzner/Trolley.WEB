@@ -18,7 +18,7 @@ const isProcessing = ref(false);
 const handleCheckout = async () => {
     try {
         isProcessing.value = true;
-        const amount = 1000; // Setzen Sie hier den Betrag
+        const amount = 1000; // input feld
         const { data } = await useFetch(`${BASE_API_URL}/api/Donation/CreateDonation`, {
             method: 'POST',
             headers: {
