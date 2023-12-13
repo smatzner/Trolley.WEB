@@ -1,7 +1,5 @@
 <script setup lang="ts">
 
-import {algorithms} from "iron-webcrypto";
-
 const props = defineProps({
   product: {
     required: true,
@@ -58,19 +56,21 @@ function removeProductFromShoppingList() {
     <span class="text-xs mt-1" v-else-if="product.isDiscountProduct">Diskonter {{ product.productName }}</span>
     <span class="text-xs mt-1" v-else>{{ product.productName }}</span>
     <span class="text-xs mt-1">{{ product.amount }}</span>
-    <PrimeContextMenu ref="menu" :model="items">
-            <template #item="{item, props}">
-              <PrimeInputNumber v-if="item.label === 'Anzahl'" v-model="product.amount" v-bind="props.action" inputId="horizontal-buttons2" showButtons buttonLayout="horizontal" :min="1" class="ms-2 me-12" inputClass="text-sm text-center w-10 h-8"
-                                decrementButtonClass="w-1/3 h-8 bg-trolley-primary  border-trolley-primary" incrementButtonClass="w-1/3 h-8 bg-trolley-primary border-trolley-primary">
-                <template #decrementbuttonicon>-</template>
-                <template #incrementbuttonicon>+</template>
-              </PrimeInputNumber>
-              <span v-else class="mx-4 my-3" v-bind="props.action">{{item.label}}</span>
-            </template>
-    </PrimeContextMenu>
   </PrimeButton>
+
+  <PrimeContextMenu ref="menu" :model="items">
+    <template #item="{item, props}">
+      <PrimeInputNumber v-if="item.label === 'Anzahl'" v-model="product.amount" v-bind="props.action"
+                        inputId="horizontal-buttons2" showButtons buttonLayout="horizontal" :min="1" class="ms-2 me-12"
+                        inputClass="text-sm text-center w-10 h-8"
+                        decrementButtonClass="w-1/3 h-8 bg-trolley-primary  border-trolley-primary"
+                        incrementButtonClass="w-1/3 h-8 bg-trolley-primary border-trolley-primary">
+        <template #decrementbuttonicon>-</template>
+        <template #incrementbuttonicon>+</template>
+      </PrimeInputNumber>
+      <span v-else class="mx-4 my-3" v-bind="props.action">{{ item.label }}</span>
+    </template>
+  </PrimeContextMenu>
+
+<!--  <EditProductContextMenu :menu="menu" :product="product"/>-->
 </template>
-
-<style scoped>
-
-</style>

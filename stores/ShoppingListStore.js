@@ -6,24 +6,23 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
     const shoppingLists = useState('shoppingLists', () => [])
     const shoppingListsProducts = useState('shoppingListsProducts', () => [])
 
-    async function saveShoppingList(shoppingList, shoppingListName) {
+    async function saveShoppingList(shoppingListProducts, shoppingListName) {
         try {
+            const shoppingList = {
+                "name": shoppingListName.name,
+                "products": shoppingListProducts
+            }
+
             await new Promise((resolve) => {
-                useFetch(BASE_URL + '/api/ShoppingList/Create', {
+                useFetch(BASE_URL + '/api/ShoppingList/CreateWithProducts', {
                     method: 'POST',
-                    body: JSON.stringify(shoppingListName),
+                    body: JSON.stringify(shoppingList),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('token')
-                    },
-                    onResponse({response}) {
-                        shoppingLists.value.push(response._data)
-                        addProductsToShoppingList(shoppingList, response._data.id)
-                    },
+                    }
                 })
                 resolve()
             })
-
-            console.log(shoppingLists.value)
         } catch (e) {
             console.error(e)
         }
@@ -37,7 +36,8 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
                         Authorization: 'Bearer ' + localStorage.getItem('token')
                     },
                     onResponse({response}) {
-                        shoppingLists.value = response._data
+                        console.log(response._data.shoppingLists)
+                        shoppingLists.value = response._data.shoppingLists
                         resolve()
                     }
                 })
@@ -45,6 +45,28 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
         } catch (e) {
             console.error(e)
         }
+    }
+
+    async function deleteShoppingList(shoppingListId) {
+        try {
+            await new Promise((resolve) => {
+                useFetch(BASE_URL + `/api/ShoppingList/${shoppingListId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                resolve()
+            })
+            const shoppingListIndex = shoppingLists.value.findIndex(shoppingList => shoppingList.id === shoppingListId)
+            shoppingLists.value.splice(shoppingListIndex, 1)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    function useShoppingList(shoppingList) {
+        localStorage.setItem('shoppingList', JSON.stringify(shoppingList.items))
     }
 
     async function addProductsToShoppingList(shoppingList, shoppingListId) {
@@ -62,6 +84,7 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
                         shoppingListsProducts.value = response._data
                     }
                 })
+                resolve()
             })
         } catch (e) {
             console.error(e)
@@ -72,6 +95,8 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
         shoppingLists,
         shoppingListsProducts,
         saveShoppingList,
-        getShoppingLists
+        getShoppingLists,
+        deleteShoppingList,
+        useShoppingList
     }
 })
