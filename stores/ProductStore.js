@@ -13,14 +13,11 @@ export const useProductStore = defineStore('product', () => {
         ])
 
         async function loadProducts() {
-            await new Promise((resolve, reject) => {
+            await new Promise((resolve) => {
                 useFetch(BASE_URL + '/api/product', {
                     onResponse({response}) {
                         products.value = response._data
                         resolve()
-                    },
-                    onError(error) {
-                        reject(error)
                     }
                 })
             })
@@ -29,7 +26,9 @@ export const useProductStore = defineStore('product', () => {
                 productsInShoppingList.value = []
                 shoppingList.value = JSON.parse(localStorage.getItem('shoppingList'))
                 shoppingList.value.forEach(productInShoppingList => {
-                    const matchingProduct = products.value.find(product => product.productId === productInShoppingList.productId ?? product)
+                    const matchingProduct = products.value.find(product => {
+                        return product.productId === productInShoppingList.productId ?? product
+                    })
                     productsInShoppingList.value.push({...matchingProduct, amount: productInShoppingList.amount})
                 })
                 getCategories()
@@ -64,19 +63,6 @@ export const useProductStore = defineStore('product', () => {
                         }
                     })
                 })
-                // const {data} = await useFetch('/api/product/suche?name=' + productName,{
-                //         transform: (fetchedProducts) => {
-                //             return fetchedProducts.filter((fetchedProduct, index, self) => {
-                //                 return index === self.findIndex((product) => (product.productName === fetchedProduct.productName))
-                //             })
-                //         },
-                //         onResponse({response}) {
-                //             /// aufruf shoppinglist controller?
-                //             // console.log(response._data)
-                //         }
-                // })
-                // const data = null
-                // console.log(data)
 
                 await AddProductsAndCalculateList(shoppingList.value)
 
@@ -88,7 +74,7 @@ export const useProductStore = defineStore('product', () => {
 
         async function updateProductFromShoppingList(updatedProduct){
             const productIndex = productsInShoppingList.value.findIndex(product => product.productId === updatedProduct.productId)
-
+            console.log(productsInShoppingList.value)
             productsInShoppingList.value.splice(productIndex, 1)
             shoppingList.value.splice(productIndex, 1)
 

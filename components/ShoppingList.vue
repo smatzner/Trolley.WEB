@@ -40,6 +40,7 @@ const items = ref([
 
 async function saveShoppingList() {
   await shoppingListStore.saveShoppingList(productStore.shoppingList, shoppingListName.value)
+  navigateTo('/shoppinglists')
 }
 
 function updatePrice() {
