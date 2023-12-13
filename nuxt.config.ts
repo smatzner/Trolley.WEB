@@ -11,7 +11,13 @@ export default defineNuxtConfig({
         },
     },
     devtools: { enabled: true },
-    modules: ["@pinia/nuxt", "@nuxtjs/tailwindcss", "nuxt-primevue", "nuxt-icon"],
+    modules: [
+      "@pinia/nuxt",
+      "@nuxtjs/tailwindcss",
+      "nuxt-primevue",
+      "nuxt-icon",
+      "@nuxtjs/device"
+    ],
     primevue: {
         components: {
             prefix: 'Prime',
