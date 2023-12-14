@@ -5,7 +5,9 @@ const shoppingLists = computed(() => shoppingListStore.shoppingLists)
 const productStore = useProductStore()
 const products = computed(() => productStore.products)
 
-onMounted(async () => {
+const confirm = useConfirm()
+
+onBeforeMount(async () => {
   await shoppingListStore.getShoppingLists()
   await productStore.loadProducts()
 })
@@ -14,8 +16,18 @@ function findProductNameByProductId(productId: any) {
   return products.value.find(product => product.productId === productId)?.productName
 }
 
-async function deleteShoppingList(shoppingListId: number) {
-  await shoppingListStore.deleteShoppingList(shoppingListId)
+function deleteShoppingList(shoppingListId: number, event: any) {
+  confirm.require({
+    target: event.target,
+    message: 'Willst du die Einkaufsliste wirklich löschen?',
+    rejectLabel: 'Nein',
+    rejectClass: 'text-black p-button-text',
+    acceptLabel: 'Ja',
+    acceptClass: 'bg-red-800 border-red-800 p-button-danger',
+    accept: async () => {
+       await shoppingListStore.deleteShoppingList(shoppingListId)
+    }
+  })
 }
 
 function useShoppingList(shoppingList: Object) {
@@ -27,13 +39,14 @@ function useShoppingList(shoppingList: Object) {
 
 <template>
   <h1 class="text-3xl font-bold m-5 text-center">Einkaufslisten</h1>
-  <PrimeAccordion :activeIndex="0">
+  <PrimeConfirmPopup/>
+  <PrimeAccordion :activeIndex="0" class="2xl:w-1/2 xl:w-3/4 mx-auto">
     <PrimeAccordionTab v-for="shoppingList in shoppingLists">
       <template #header>
         <div class="flex justify-between w-full">
           <p class="my-auto">{{ shoppingList.name }}</p>
           <div class="flex gap-2">
-            <PrimeButton @click="deleteShoppingList(shoppingList.id)" class="bg-red-800 border-red-800" size="small">
+            <PrimeButton @click="deleteShoppingList(shoppingList.id, $event)" class="bg-red-800 border-red-800" severity="danger" size="small">
               <Icon name="fa6-solid:trash"></Icon>
             </PrimeButton>
             <PrimeButton @click="useShoppingList(shoppingList)" class="bg-trolley-primary border-trolley-primary"
@@ -53,7 +66,7 @@ function useShoppingList(shoppingList: Object) {
       </PrimeListbox>
     </PrimeAccordionTab>
   </PrimeAccordion>
-  </template>
+</template>
 
 <style scoped>
 

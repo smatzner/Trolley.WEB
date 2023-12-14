@@ -9,6 +9,8 @@ const userErrorMessage = ref('');
 
 const visible = ref(false)
 
+const toast = useToast()
+
 watch(registrationDialog, () => visible.value = registrationDialog.value)
 watch(visible, () => authStore.registrationDialog = visible.value)
 
@@ -17,8 +19,9 @@ async function register() {
     try {
       await authStore.register(email.value, password.value)
       visible.value = false
-    } catch (e) {
-      console.error(e)
+      toast.add({ severity: 'cusotm', summary: 'Registrierung erfolgreich', group: 'auth', life: 2000 })
+    } catch (e : any) {
+      console.log(e.status)
     }
   } else {
     console.log('Passwörter stimmen nicht überein') // TODO: validation
@@ -54,4 +57,5 @@ async function register() {
       </form>
     </template>
   </PrimeDialog>
+  <PrimeToast/>
 </template>

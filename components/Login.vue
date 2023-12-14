@@ -8,14 +8,18 @@ const userErrorMessage = ref('');
 
 const visible = ref(false)
 
+const toast = useToast()
+
 watch(loginDialog, () => visible.value = loginDialog.value)
 watch(visible, () => authStore.loginDialog = visible.value)
+
 async function login() {
   try {
     await authStore.login(email.value, password.value)
     visible.value = false
-  } catch (e) {
-    console.error(e) // TODO: validation
+    toast.add({severity: 'custom', summary: 'Login erfolgreich',group:'auth', life: 2000})
+  } catch (e: any) {
+    console.log(e)// TODO: validation
   }
 }
 </script>
@@ -23,8 +27,8 @@ async function login() {
 <template>
   <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask>
     <template #container="{closeCallback}">
-      <form @submit.prevent="login">
-        <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent">
+      <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent">
+        <form @submit.prevent="login">
           <label class="flex flex-col m-4">
             <span class="font-light text-white text-sm mb-1">E-Mail</span>
             <PrimeInputText v-model="email" class="border-none p-3"/>
@@ -39,8 +43,9 @@ async function login() {
                          type="submit"/>
             <PrimeButton label="Cancel" @click="closeCallback" text class="p-3 w-full text-white"/>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </template>
   </PrimeDialog>
+
 </template>

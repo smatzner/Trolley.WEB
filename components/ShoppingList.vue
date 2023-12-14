@@ -18,6 +18,8 @@ const shoppingListName = ref({
   name: ''
 })
 
+const toast = useToast()
+
 watch(costsPerMarket, () => {
   if (costsPerMarket.value.length > 0) {
     selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
@@ -38,8 +40,14 @@ const items = ref([
 ])
 
 async function saveShoppingList() {
-  await shoppingListStore.saveShoppingList(productStore.shoppingList, shoppingListName.value)
-  visibleDialog.value = false
+  try{
+    await shoppingListStore.saveShoppingList(productStore.shoppingList, shoppingListName.value)
+    toast.add({severity: 'custom', summary: 'Einkaufsliste gespeichert', group: 'headless', life: 2000})
+    visibleDialog.value = false
+  } catch (e) {
+    console.error(e)
+  }
+
 }
 
 function updatePrice() {
@@ -94,6 +102,26 @@ function updatePrice() {
       </PrimeButton>
     </form>
   </PrimeDialog>
+
+  <PrimeToast position="top-center" group="headless">
+    <template #container="{ message, closeCallback }">
+        <div class="flex flex-col gap-3 p-3 w-full bg-black shadow-2 rounded-xl">
+          <div class="flex justify-between">
+            <p class="m-0 font-semibold text-base text-white">{{ message.summary }}</p>
+            <PrimeButton text class="text-white p-0" @click="closeCallback">
+              <Icon name="fa6-solid:xmark"/>
+            </PrimeButton>
+          </div>
+          <div class="mx-auto gap-3">
+            <PrimeButton size="small" class="text-trolley-accent" text @click="navigateTo('/shoppinglists')">
+              <Icon name="fa6-solid:right-to-bracket"/>
+              <span class="ms-3 font-semibold">Zu Einkaufslisten</span>
+            </PrimeButton>
+            <PrimeButton label="Schließen" size="small" class="text-white" text @click="closeCallback"/>
+          </div>
+        </div>
+    </template>
+  </PrimeToast>
 </template>
 
 <style scoped>

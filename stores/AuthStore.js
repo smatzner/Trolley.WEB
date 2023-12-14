@@ -16,54 +16,52 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function register(username, password) {
-        try {
-            const {data} = await useFetch(`${AUTH_API_URL}Register`, {
-                method: 'POST',
-                body: JSON.stringify({username, password}),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (data.value && data.value.jwtToken) {
-                token.value = data.value.jwtToken.replace("Bearer ", "")
-                localStorage.setItem('token', token.value)
-                isLoggedIn.value = true
-                registrationDialog.value = false
+        const {data, error} = await useFetch(`${AUTH_API_URL}Register`, {
+            method: 'POST',
+            body: JSON.stringify({username, password}),
+            headers: {
+                'Content-Type': 'application/json'
             }
-        } catch (e) {
-            throw e
+        })
+
+        if (error.value) throw error.value.data
+
+
+        if (data.value && data.value.jwtToken) {
+            token.value = data.value.jwtToken.replace("Bearer ", "")
+            localStorage.setItem('token', token.value)
+            isLoggedIn.value = true
+            registrationDialog.value = false
         }
     }
 
     async function login(username, password) {
-        try {
-            const {data} = await useFetch(`${AUTH_API_URL}Login`, {
-                method: 'POST',
-                body: JSON.stringify({username, password}),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
 
-            if (data.value && data.value.jwtToken) {
-                token.value = data.value.jwtToken.replace("Bearer ", "")
-                localStorage.setItem('token', token.value)
-                isLoggedIn.value = true
-                loginDialog.value = false
+        const {data, error} = await useFetch(`${AUTH_API_URL}Login`, {
+            method: 'POST',
+            body: JSON.stringify({username, password}),
+            headers: {
+                'Content-Type': 'application/json'
             }
-        } catch (e) {
-            throw e
+        })
+
+        if (error.value) throw error.value.data
+
+        if (data.value && data.value.jwtToken) {
+            token.value = data.value.jwtToken.replace("Bearer ", "")
+            localStorage.setItem('token', token.value)
+            isLoggedIn.value = true
+            loginDialog.value = false
         }
     }
 
-    function logout(){
+    function logout() {
         token.value = null
         isLoggedIn.value = false
         localStorage.removeItem('token')
     }
 
-    return{
+    return {
         isLoggedIn,
         loginDialog,
         registrationDialog,
