@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
 
             if (data.value && data.value.jwtToken) {
                 token.value = data.value.jwtToken.replace("Bearer ", "")
-                localStorage.setItem('token', token)
+                localStorage.setItem('token', token.value)
                 isLoggedIn.value = true
                 registrationDialog.value = false
             }
@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
 
             if (data.value && data.value.jwtToken) {
                 token.value = data.value.jwtToken.replace("Bearer ", "")
-                localStorage.setItem('token', token)
+                localStorage.setItem('token', token.value)
                 isLoggedIn.value = true
                 loginDialog.value = false
             }
