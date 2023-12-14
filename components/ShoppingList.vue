@@ -18,7 +18,6 @@ const shoppingListName = ref({
   name: ''
 })
 
-
 watch(costsPerMarket, () => {
   if (costsPerMarket.value.length > 0) {
     selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
@@ -40,7 +39,7 @@ const items = ref([
 
 async function saveShoppingList() {
   await shoppingListStore.saveShoppingList(productStore.shoppingList, shoppingListName.value)
-  navigateTo('/shoppinglists')
+  visibleDialog.value = false
 }
 
 function updatePrice() {
@@ -55,18 +54,20 @@ function updatePrice() {
 </script>
 
 <template>
+  <AddProductForm v-if="!$device.isMobile"/>
   <PrimeFieldset v-for="category in categories" :legend="category" :toggleable="true"
-                 class="mt-3 border-0 shadow-md w-vh">
-    <div class="grid grid-cols-3 gap-1 fieldset-container">
+                 class="mt-3 border-0 shadow-md sm:w-[418px] w-[360px] lg:w-[520px] mx-auto">
+    <div class="grid grid-cols-3 lg:grid-cols-4 gap-2 justify-items-center">
       <template v-for="product in productsInShoppingList">
         <Product v-if="product.productCategoryName == category" :product="product"/>
       </template>
     </div>
   </PrimeFieldset>
 
-  <PrimeSpeedDial :model="items" direction="left" class="fixed bottom-[100px] right-5 drop-shadow-2xl"
+  <PrimeSpeedDial :model="items" direction="left" class="fixed right-5 drop-shadow-2xl"
+                  :class="$device.isMobile ? 'bottom-[100px]' : 'bottom-5'"
                   buttonClass="bg-trolley-primary border-trolley-primary" :rotateAnimation="false"
-                  :hideOnClickOutside="false">
+                  :hideOnClickOutside="false" :visible="!$device.isMobile">
     <template #icon>
       <Icon name="fa6-solid:cart-shopping"/>
     </template>
@@ -77,7 +78,8 @@ function updatePrice() {
                        optionLabel="marketName" text rounded raised></PrimeDropdown>
         <PrimeInputGroupAddon>{{ totalPrice }} €</PrimeInputGroupAddon>
       </PrimeInputGroup>
-      <PrimeButton v-if="item.label === 'Einkaufsliste speichern' && isLoggedIn && productsInShoppingList.length > 0" @click="visibleDialog = true"
+      <PrimeButton v-if="item.label === 'Einkaufsliste speichern' && isLoggedIn && productsInShoppingList.length > 0"
+                   @click="visibleDialog = true"
                    class="bg-trolley-primary border-trolley-primary">
         <Icon name="fa6-solid:floppy-disk"/>
       </PrimeButton>

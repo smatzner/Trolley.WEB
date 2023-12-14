@@ -2,29 +2,17 @@
 import NavMobile from "~/layouts/nav/Mobile.vue";
 import NavDesktop from "~/layouts/nav/Desktop.vue";
 
-const windowWidth = ref()
-
-onMounted(() => {
-  if (process.client) {
-    windowWidth.value = window.innerWidth
-    window.addEventListener('resize', () => {
-      windowWidth.value = window.innerWidth
-    })
-  }
-})
-
-
 </script>
 
 <template>
-  <NavDesktop v-if="windowWidth > 960"></NavDesktop>
-  <main class="p-4">
-      <slot/>
+  <NavDesktop v-if="!$device.isMobile" @login="toggleLoginDialog()"></NavDesktop>
+  <main class="p-4 mb-28">
+    <slot/>
   </main>
-<!--  <NavMobile v-if="windowWidth <= 960"></NavMobile>-->
-  <NavMobile/>
+  <NavMobile v-if="$device.isMobile"/>
+
+  <Login/>
+
+  <Registration/>
+
 </template>
-
-<style scoped>
-
-</style>

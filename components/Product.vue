@@ -49,7 +49,7 @@ function removeProductFromShoppingList() {
 </script>
 
 <template>
-  <PrimeButton class="bg-trolley-primary flex-col text-white aspect-square" @click="removeProductFromShoppingList()"
+  <PrimeButton class="bg-trolley-primary flex-col text-white w-[6.25rem] aspect-square" @click="removeProductFromShoppingList()"
                @contextmenu="onRightClick">
     <Icon :name="'fa6-solid:'+ product.iconName" class="text-7xl"/>
     <span class="text-xs mt-1" v-if="product.isOrganic">Bio {{ product.productName }}</span>

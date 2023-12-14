@@ -1,56 +1,57 @@
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/AuthStore';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
+<script setup lang="ts">
 
-const username = ref('');
+const email = ref('');
 const password = ref('');
+const confirmPassword = ref('')
 const authStore = useAuthStore();
-const router = useRouter();
+const registrationDialog = computed(() => authStore.registrationDialog)
 const userErrorMessage = ref('');
 
-const register = async () => {
+const visible = ref(false)
+
+watch(registrationDialog, () => visible.value = registrationDialog.value)
+watch(visible, () => authStore.registrationDialog = visible.value)
+
+async function register() {
+  if(password.value === confirmPassword.value){
     try {
-        await authStore.register(username.value, password.value);
-        router.push('/');
-    } catch (error) {
-        console.error(error.message);
-        if (error.message.includes('400')) {
-            userErrorMessage.value = 'Registrierung fehlgeschlagen: Benutzername oder Daten ungültig.';
-        } else {
-            userErrorMessage.value = 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.';
-        }
+      await authStore.register(email.value, password.value)
+      visible.value = false
+    } catch (e) {
+      console.error(e)
     }
-};
+  } else {
+    console.log('Passwörter stimmen nicht überein') // TODO: validation
+  }
+}
 </script>
 
 <template>
-    <div class="p-fluid">
-        <h2>Registrierung</h2>
-        <form @submit.prevent="register">
-            <InputText v-model="username" placeholder="E-Mail" />
-            <PrimePassword v-model="password">
-                <template #header>
-                    <h6>Pick a password</h6>
-                </template>
-                <template #footer>
-                    <Divider />
-                    <p class="mt-2">Suggestions</p>
-                    <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-                        <li>At least one lowercase</li>
-                        <li>At least one uppercase</li>
-                        <li>At least one numeric</li>
-                        <li>Minimum 8 characters</li>
-                    </ul>
-                </template>
-            </PrimePassword>
-
-            <Button label="Registrieren" type="submit" />
-            <p v-if="userErrorMessage" class="error-message">{{ userErrorMessage }}</p>
-        </form>
-    </div>
+  <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask>
+    <template #container="{closeCallback}">
+      <form @submit.prevent="register">
+        <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent">
+          <label class="flex flex-col m-4">
+            <span class="font-light text-white text-sm mb-1">E-Mail</span>
+            <PrimeInputText v-model="email" class="border-none p-3"/>
+          </label>
+          <label class="flex flex-col m-4">
+            <span class="font-light text-white text-sm mb-1">Passwort</span>
+            <PrimePassword v-model="password" class="border-none" type="password" promptLabel="Passwort wählen"
+                           weakLabel="Schwaches Passwort" mediumLabel="Durchschnittliches Passwort" strongLabel="Starkes Passwort"/>
+          </label>
+          <label class="flex flex-col m-4">
+            <span class="font-light text-white text-sm mb-1">Passwort bestätigen</span>
+            <PrimePassword v-model="confirmPassword" class="border-none" type="password" :feedback="false"/>
+          </label>
+          <div class="flex align-items-center gap-2">
+            <PrimeButton label="Registrieren" text
+                         class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10"
+                         type="submit"/>
+            <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white"/>
+          </div>
+        </div>
+      </form>
+    </template>
+  </PrimeDialog>
 </template>
-
-<style scoped></style>

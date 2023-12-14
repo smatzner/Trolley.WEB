@@ -4,27 +4,28 @@
       <a class="" v-bind="props.action">{{ item.label }}</a>
     </template>
     <template #end>
-      <PrimeButton text rounded severity="secondary" @click="toggle" aria-haspopup="true" aria-controls="userMenu"
+      <PrimeButton text rounded severity="secondary" @click="visibleUserMenu = true" aria-haspopup="true" aria-controls="userMenu"
                    aria-label="User" class="place-content-center w-20">
         <Icon name="fa6-solid:user" class="text-lg"></Icon>
       </PrimeButton>
-      <PrimeMenu ref="userMenu" id="userMenu" :model="userMenuItems" :popup="true">
-        <template #item="{ item, props }">
-          <div v-bind="props.action">
-            <button v-if="item.label === 'Logout'" @click="logout">{{ item.label }}</button>
-            <NuxtLink v-else :to="item.route">{{ item.label }}</NuxtLink>
-
-          </div>
-        </template>
-      </PrimeMenu>
     </template>
   </PrimeMenubar>
+
+  <UserMenu v-model:visible="visibleUserMenu" @closeUserMenu="visibleUserMenu = false" @login="login()"/>
 </template>
 
 <script setup lang="ts">
 const authStore = useAuthStore();
 const userMenu = ref();
 const router = useRouter();
+
+const visibleUserMenu = ref(false)
+
+const emit = defineEmits(['login'])
+
+function login(){
+  emit('login')
+}
 
 const logout = () => {
   authStore.logout();
@@ -33,11 +34,11 @@ const logout = () => {
 
 const userMenuItems = computed(() => {
   return authStore.isLoggedIn
-      ? [{label: 'Logout', command: logout}, {separator: true},
+      ? [{label: 'Logout', command: logout},
         {label: 'Einstellungen', route: '/settings'}
       ]
       : [
-        {label: 'Login', route: '/auth/login'}, {separator: true},
+        {label: 'Login', route: '/auth/login'},
         {label: 'Registrieren', route: '/auth/register'}
       ];
 });

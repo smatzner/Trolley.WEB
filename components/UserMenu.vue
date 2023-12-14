@@ -7,17 +7,27 @@ const links = computed(() => {
       {label: 'Profil', route: '/'},
       {label: 'Einkaufslisten', route: '/shoppinglists'},
       {label: 'Logout', route: '/'},
-      {label: 'Go Premium', route: '/'}
+      {label: 'Go Premium', route: '/donation'}
     ]
   } else {
     return [
-      {label: 'Login', route: '/auth/login'},
-      {label: 'Registrieren', route: '/auth/register'}
+      {label: 'Login', command: () => login()},
+      {label: 'Registrieren', command: () => register()}
     ]
   }
 })
 
-const emit = defineEmits(['closeUserMenu'])
+const emit = defineEmits(['closeUserMenu','login'])
+
+function login() {
+  authStore.loginDialog = true
+  emit('closeUserMenu')
+}
+
+function register(){
+  authStore.registrationDialog = true
+  emit('closeUserMenu')
+}
 
 function logout() {
   authStore.logout()
@@ -27,7 +37,7 @@ function logout() {
 </script>
 
 <template>
-  <PrimeSidebar position="bottom" class="h-1/2 rounded-t-2xl" header="User">
+  <PrimeSidebar :position="$device.isMobile ? 'bottom' : 'right'" class="rounded-2xl" :class="$device.isMobile ? 'h-1/2' : 'lg:w-1/3 md:w-1/2 w-full'" header="User">
     <div class="mx-auto grid content-center gap-4 w-2/3 h-full">
       <template v-for="link in links">
         <template v-if="authStore.isLoggedIn">
@@ -37,9 +47,7 @@ function logout() {
             <PrimeButton :label="link.label" class="w-full" :class="link.label === 'Go Premium' ? 'bg-trolley-accent border-trolley-accent' : 'bg-trolley-primary border-trolley-primary'"/>
           </NuxtLink>
         </template>
-        <NuxtLink v-else :to="link.route">
-          <PrimeButton :label="link.label" class="bg-trolley-primary border-trolley-primary w-full"/>
-        </NuxtLink>
+          <PrimeButton v-else :label="link.label" @click="link.command" class="bg-trolley-primary border-trolley-primary w-full"/>
       </template>
     </div>
   </PrimeSidebar>

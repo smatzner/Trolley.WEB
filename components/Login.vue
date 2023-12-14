@@ -1,56 +1,46 @@
-<script setup>
-import {ref} from 'vue';
-import {useRouter} from 'vue-router';
-import {useAuthStore} from '@/stores/AuthStore';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
+<script setup lang="ts">
 
-const username = ref('');
+const email = ref('');
 const password = ref('');
 const authStore = useAuthStore();
-const router = useRouter();
+const loginDialog = computed(() => authStore.loginDialog)
 const userErrorMessage = ref('');
 
+const visible = ref(false)
 
-const login = async () => {
+watch(loginDialog, () => visible.value = loginDialog.value)
+watch(visible, () => authStore.loginDialog = visible.value)
+async function login() {
   try {
-    await authStore.login(username.value, password.value);
-    router.push('/');
-  } catch (error) {
-    console.error('Login-Fehler:', error);
-    if (error.message.includes('400')) {
-      userErrorMessage.value = 'Login fehlgeschlagen: Benutzername oder Daten ungültig.';
-    } else {
-      userErrorMessage.value = 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.';
-    }
+    await authStore.login(email.value, password.value)
+    visible.value = false
+  } catch (e) {
+    console.error(e) // TODO: validation
   }
 }
-
 </script>
 
 <template>
-  <div class="p-fluid">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <InputText v-model="username" placeholder="E-Mail"/>
-      <PrimePassword v-model="password">
-        <template #header>
-          <h6>Melde dich mit deinem Passwort an.</h6>
-        </template>
-        <template #footer>
-          <Divider/>
-          <p class="mt-2">Suggestions</p>
-          <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-            <li>At least one lowercase</li>
-            <li>At least one uppercase</li>
-            <li>At least one numeric</li>
-            <li>Minimum 8 characters</li>
-          </ul>
-        </template>
-      </PrimePassword>
-      <Button label="Einloggen" type="submit"/>
-    </form>
-  </div>
+  <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask>
+    <template #container="{closeCallback}">
+      <form @submit.prevent="login">
+        <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent">
+          <label class="flex flex-col m-4">
+            <span class="font-light text-white text-sm mb-1">E-Mail</span>
+            <PrimeInputText v-model="email" class="border-none p-3"/>
+          </label>
+          <label class="flex flex-col m-4">
+            <span class="font-light text-white text-sm mb-1">Password</span>
+            <PrimeInputText v-model="password" class="border-none p-3" type="password"/>
+          </label>
+          <div class="flex align-items-center gap-2">
+            <PrimeButton label="Sign-In" text
+                         class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10"
+                         type="submit"/>
+            <PrimeButton label="Cancel" @click="closeCallback" text class="p-3 w-full text-white"/>
+          </div>
+        </div>
+      </form>
+    </template>
+  </PrimeDialog>
 </template>
-
-<style scoped></style>

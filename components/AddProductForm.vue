@@ -22,8 +22,12 @@ const organic = ref(false)
 const discount = ref(false)
 const amount = ref(1)
 
-watch(organic,() => {if(organic.value) discount.value = false})
-watch(discount,() => {if(discount.value) organic.value = false})
+watch(organic, () => {
+  if (organic.value) discount.value = false
+})
+watch(discount, () => {
+  if (discount.value) organic.value = false
+})
 
 const shoppingListProduct = ref({
   productName: '',
@@ -51,33 +55,42 @@ async function addProductToShoppingList() {
 </script>
 
 <template>
-  <form @submit.prevent="addProductToShoppingList()">
-    <div class="flex">
-      <PrimeAutoComplete v-model="selectedProduct" optionLabel="productName" :suggestions="filteredProducts"
-                         @complete="search" placeholder="Produkt suchen" class="h-8 w-36" inputClass="text-sm w-36"/>
-      <PrimeInputNumber v-model="amount" inputId="horizontal-buttons" showButtons buttonLayout="horizontal" :min="1"
-                        class="ms-2 me-12" inputClass="text-sm text-center w-10 h-8"
-                        decrementButtonClass="w-1/2 h-8 bg-trolley-primary  border-trolley-primary"
-                        incrementButtonClass="w-1/2 h-8 bg-trolley-primary border-trolley-primary">
-        <template #decrementbuttonicon>-</template>
-        <template #incrementbuttonicon>+</template>
-      </PrimeInputNumber>
-      <PrimeButton type="submit" label="Hinzufügen" class="bg-trolley-primary border-trolley-primary h-8" size="small"/>
-    </div>
+  <div class="flex justify-center">
+    <form @submit.prevent="addProductToShoppingList()">
+      <div class="flex">
+        <PrimeAutoComplete v-model="selectedProduct" optionLabel="productName" :suggestions="filteredProducts"
+                           @complete="search" placeholder="Produkt suchen" class="h-8 w-36" inputClass="text-sm w-36"/>
+        <PrimeInputNumber v-model="amount" inputId="horizontal-buttons" showButtons buttonLayout="horizontal" :min="1"
+                          class="ms-2 me-12" inputClass="text-sm text-center w-10 h-8"
+                          decrementButtonClass="w-1/2 h-8 bg-trolley-primary  border-trolley-primary"
+                          incrementButtonClass="w-1/2 h-8 bg-trolley-primary border-trolley-primary">
+          <template #decrementbuttonicon>-</template>
+          <template #incrementbuttonicon>+</template>
+        </PrimeInputNumber>
+              <PrimeButton v-if="!$device.isMobile" type="submit" label="Hinzufügen" class="bg-trolley-primary border-trolley-primary h-8" size="small"/>
+      </div>
 
-    <div class="flex flex-col items-start mx-auto w-1/3 mt-3 gap-2">
-      <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" value="" class="sr-only peer" v-model="organic">
-        <div
-            class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-trolley-primary"></div>
-        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Bio</span>
-      </label>
-      <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" value="" class="sr-only peer" v-model="discount">
-        <div
-            class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-trolley-primary"></div>
-        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Diskonter</span>
-      </label>
-    </div>
-  </form>
+      <div class="flex justify-center mx-auto w-1/3 mt-3 gap-2" :class="$device.isMobile ? 'flex-col item-start' : ''">
+        <div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" class="sr-only peer" v-model="organic">
+            <div
+                class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-trolley-primary"></div>
+            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Bio</span>
+          </label>
+        </div>
+        <div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" class="sr-only peer" v-model="discount">
+            <div
+                class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-trolley-primary"></div>
+            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Diskonter</span>
+          </label>
+        </div>
+      </div>
+      <div v-if="$device.isMobile" class="flex mt-3">
+        <PrimeButton type="submit" label="Hinzufügen" class="bg-trolley-primary border-trolley-primary h-8 mx-auto"/>
+      </div>
+    </form>
+  </div>
 </template>

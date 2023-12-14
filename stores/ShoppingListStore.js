@@ -7,6 +7,7 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
     const shoppingListsProducts = useState('shoppingListsProducts', () => [])
 
     async function saveShoppingList(shoppingListProducts, shoppingListName) {
+        console.log(shoppingListProducts)
         try {
             const shoppingList = {
                 "name": shoppingListName.name,
@@ -36,7 +37,6 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
                         Authorization: 'Bearer ' + localStorage.getItem('token')
                     },
                     onResponse({response}) {
-                        console.log(response._data.shoppingLists)
                         shoppingLists.value = response._data.shoppingLists
                         resolve()
                     }
