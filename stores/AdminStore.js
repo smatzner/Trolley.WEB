@@ -51,7 +51,7 @@ export const useAdminStore = defineStore('admin', () => {
             if (response.ok) {
                 allUsersWithRoles.value = allUsersWithRoles.value.filter(user => user.id !== userId);
             }
-            
+
         } catch (e) {
             console.error('Error deleting user:', e);
         }
@@ -174,7 +174,8 @@ export const useAdminStore = defineStore('admin', () => {
             const { data } = await useFetch(`${BASE_URL}/api/Admin/Get1TempProduct?tempProductId=${tempProductId}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    'content-type': 'application/json'
                 }
             });
             // Verarbeite die einzelne TempProduct-Daten
@@ -212,24 +213,40 @@ export const useAdminStore = defineStore('admin', () => {
         }
     }
 
-    return {
-        users,
-        roles,
-        allUsersWithRoles,
-        tempProducts,
-        loadUsers,
-        getUserRoles,
-        addRoleToUser,
-        removeRoleFromUser,
-        deleteTempProducts,
-        getTempProducts,
-        get1TempProduct,
-        approve1Product,
-        approveProducts,
-        loadTempProducts,
-        getAllUsersWithRoles,
-        updateRoleForUser,
-        deleteUser
+    async function remove1Product() {
+        try {
+            await useFetch(`${BASE_URL}/api/Admin/Remove1TempProduct`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
 
-    };
-});
+                }
+            });
+        } catch (e) {
+            console.error('Error removing product:', e);
+        }
+    }
+
+
+        return {
+            users,
+            roles,
+            allUsersWithRoles,
+            tempProducts,
+            loadUsers,
+            getUserRoles,
+            addRoleToUser,
+            removeRoleFromUser,
+            deleteTempProducts,
+            getTempProducts,
+            get1TempProduct,
+            approve1Product,
+            approveProducts,
+            loadTempProducts,
+            getAllUsersWithRoles,
+            updateRoleForUser,
+            deleteUser,
+            remove1Product
+
+        };
+    });
