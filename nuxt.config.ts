@@ -1,8 +1,9 @@
 export default defineNuxtConfig({
+    ssr: false,
     app: {
         head: {
             title: "Trolley",
-            script: [{ src: "https://js.stripe.com/v3/", defer: true }],
+            script: [{src: "https://js.stripe.com/v3/", defer: true}],
         }
     },
     runtimeConfig: {
@@ -10,13 +11,14 @@ export default defineNuxtConfig({
             stripePk: process.env.STRIPE_PUBLIC_KEY,
         },
     },
-    devtools: { enabled: true },
+    devtools: {enabled: true},
     modules: [
-      "@pinia/nuxt",
-      "@nuxtjs/tailwindcss",
-      "nuxt-primevue",
-      "nuxt-icon",
-      "@nuxtjs/device"
+        "@pinia/nuxt",
+        "@nuxtjs/tailwindcss",
+        "nuxt-primevue",
+        "nuxt-icon",
+        "@nuxtjs/device",
+        "@vee-validate/nuxt"
     ],
     primevue: {
         components: {
@@ -25,7 +27,22 @@ export default defineNuxtConfig({
         },
         cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
     },
-
+    veeValidate: {
+        autoImports: true,
+        componentNames: {
+            Form: 'VeeForm',
+            Field: 'VeeField',
+            FieldArray: 'VeeFieldArray',
+            ErrorMessage: 'VeeErrorMessage',
+        }
+    },
     css: ['primevue/resources/themes/lara-light-blue/theme.css'],
-    plugins: ['~/plugins/auth.js']
+    plugins: [
+        '~/plugins/auth.js',
+        '~/plugins/yupConfig.js',
+        '~/plugins/veeValidate.js'
+    ],
+    alias: {
+        pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
+    },
 })

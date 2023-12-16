@@ -26,7 +26,6 @@ export const useAuthStore = defineStore('auth', () => {
 
         if (error.value) throw error.value.data
 
-
         if (data.value && data.value.jwtToken) {
             token.value = data.value.jwtToken.replace("Bearer ", "")
             localStorage.setItem('token', token.value)

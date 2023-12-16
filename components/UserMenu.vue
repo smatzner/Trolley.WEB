@@ -1,21 +1,40 @@
 <script setup lang="ts">
 const authStore = useAuthStore()
 
+// const links = computed(() => {
+//   if (authStore.isLoggedIn) {
+//     return [
+//       {label: 'Profil', route: '/'},
+//       {label: 'Einkaufslisten', route: '/shoppinglists'},
+//       {label: 'Logout', route: '/'},
+//       {label: 'Go Premium', route: '/donation'}
+//     ]
+//   } else {
+//     return [
+//       {label: 'Login', command: () => login()},
+//       {label: 'Registrieren', command: () => register()}
+//     ]
+//   }
+// })
+//
 const links = computed(() => {
-  if (authStore.isLoggedIn) {
-    return [
-      {label: 'Profil', route: '/'},
-      {label: 'Einkaufslisten', route: '/shoppinglists'},
-      {label: 'Logout', route: '/'},
-      {label: 'Go Premium', route: '/donation'}
-    ]
-  } else {
-    return [
-      {label: 'Login', command: () => login()},
-      {label: 'Registrieren', command: () => register()}
-    ]
+  let items = []
+  if (!authStore.isLoggedIn) {
+    items.push(
+        {label: 'Login', command: () => login()},
+        {label: 'Registrieren', command: () => register()}
+    )
+    // if(authStore.)
+    return items
   }
+  return [
+    {label: 'Profil', route: '/'},
+    {label: 'Einkaufslisten', route: '/shoppinglists'},
+    {label: 'Logout', route: '/'},
+    {label: 'Go Premium', route: '/donation'}
+  ]
 })
+
 
 const emit = defineEmits(['closeUserMenu', 'login'])
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import * as yup from "yup";
 
-const email = ref('');
-const password = ref('');
 const authStore = useAuthStore();
 const loginDialog = computed(() => authStore.loginDialog)
 const userErrorMessage = ref('');
@@ -13,37 +12,61 @@ const toast = useToast()
 watch(loginDialog, () => visible.value = loginDialog.value)
 watch(visible, () => authStore.loginDialog = visible.value)
 
-async function login() {
+
+const schema = yup.object({
+  email: yup.string().required().email().label('Email address'),
+  password: yup.string().required().label('Password')
+})
+
+const initialValues = {email: '', password: ''}
+
+async function login(values: any) {
   try {
-    await authStore.login(email.value, password.value)
+    await authStore.login(values.email, values.password)
     visible.value = false
-    toast.add({severity: 'custom', summary: 'Login erfolgreich',group:'auth', life: 2000})
+    toast.add({severity: 'custom', summary: 'Login erfolgreich', group: 'auth', life: 2000})
   } catch (e: any) {
-    console.log(e)// TODO: validation
+    console.error(e)// TODO: validation
+    userErrorMessage.value = 'Email oder Passwort inkorrekt'
   }
 }
+
+
 </script>
 
 <template>
   <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask>
     <template #container="{closeCallback}">
       <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent">
-        <form @submit.prevent="login">
-          <label class="flex flex-col m-4">
-            <span class="font-light text-white text-sm mb-1">E-Mail</span>
-            <PrimeInputText v-model="email" class="border-none p-3"/>
-          </label>
-          <label class="flex flex-col m-4">
-            <span class="font-light text-white text-sm mb-1">Password</span>
-            <PrimeInputText v-model="password" class="border-none p-3" type="password"/>
-          </label>
+        <PrimeMessage v-if="userErrorMessage" severity="error" class="h-12 flex"
+                      :pt="{
+                          root: {class: 'bg-orange-300 text-orange-500 border-orange-500'},
+                          icon: {class: 'text-orange-500'},
+                          closeButton: {class: 'text-orange-500'},
+                      }">
+          {{ userErrorMessage }}
+        </PrimeMessage>
+
+        <VeeForm
+            :initial-values="initialValues"
+            :validation-schema="schema"
+            v-slot="{meta: formMeta, error: formErrors}"
+            @submit="login"
+        >
+          <VeeInputText label="E-mail" name="email" type="email"/>
+
+          <VeePassword label="Passwort" name="password" />
+
           <div class="flex align-items-center gap-2">
-            <PrimeButton label="Sign-In" text
+            <PrimeButton label="Login"
+                         text
                          class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10"
-                         type="submit"/>
-            <PrimeButton label="Cancel" @click="closeCallback" text class="p-3 w-full text-white"/>
+                         type="submit"
+            />
+            <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white"/>
           </div>
-        </form>
+
+        </VeeForm>
       </div>
     </template>
   </PrimeDialog>
