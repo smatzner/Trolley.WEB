@@ -40,7 +40,8 @@ export default defineNuxtConfig({
     plugins: [
         '~/plugins/auth.js',
         '~/plugins/yupConfig.js',
-        '~/plugins/veeValidate.js'
+        '~/plugins/veeValidate.js',
+        '~/plugins/error-handler.ts'
     ],
     alias: {
         pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"

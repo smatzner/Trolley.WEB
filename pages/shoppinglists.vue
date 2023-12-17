@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth'
+})
+
 const shoppingListStore = useShoppingListStore()
 const shoppingLists = computed(() => shoppingListStore.shoppingLists)
 
@@ -25,7 +29,7 @@ function deleteShoppingList(shoppingListId: number, event: any) {
     acceptLabel: 'Ja',
     acceptClass: 'bg-red-800 border-red-800 p-button-danger',
     accept: async () => {
-       await shoppingListStore.deleteShoppingList(shoppingListId)
+      await shoppingListStore.deleteShoppingList(shoppingListId)
     }
   })
 }
@@ -40,13 +44,18 @@ function useShoppingList(shoppingList: Object) {
 <template>
   <h1 class="text-3xl font-bold m-5 text-center">Einkaufslisten</h1>
   <PrimeConfirmPopup/>
+  <div class="text-center" v-if="shoppingLists.length < 1">Keine Einkaufslisten gespeichert</div>
   <PrimeAccordion :activeIndex="0" class="2xl:w-1/2 xl:w-3/4 mx-auto">
     <PrimeAccordionTab v-for="shoppingList in shoppingLists">
       <template #header>
         <div class="flex justify-between w-full">
           <p class="my-auto">{{ shoppingList.name }}</p>
           <div class="flex gap-2">
-            <PrimeButton @click="deleteShoppingList(shoppingList.id, $event)" class="bg-red-800 border-red-800" severity="danger" size="small">
+            <PrimeButton
+                @click="deleteShoppingList(shoppingList.id, $event)"
+                class="bg-red-800 border-red-800"
+                severity="danger" size="small"
+            >
               <Icon name="fa6-solid:trash"></Icon>
             </PrimeButton>
             <PrimeButton @click="useShoppingList(shoppingList)" class="bg-trolley-primary border-trolley-primary"

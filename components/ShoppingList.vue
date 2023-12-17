@@ -42,7 +42,7 @@ const items = ref([
 async function saveShoppingList() {
   try{
     await shoppingListStore.saveShoppingList(productStore.shoppingList, shoppingListName.value)
-    toast.add({severity: 'custom', summary: 'Einkaufsliste gespeichert', group: 'headless', life: 2000})
+    toast.add({severity: 'custom', summary: 'Einkaufsliste gespeichert', group: 'headless', life: 3000})
     visibleDialog.value = false
   } catch (e) {
     console.error(e)

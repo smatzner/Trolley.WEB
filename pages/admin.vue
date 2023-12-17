@@ -79,6 +79,10 @@
 <script setup>
 import { useAdminStore } from '@/stores/AdminStore';
 
+definePageMeta({
+  middleware: 'admin'
+})
+
 
 const tempProducts = computed(() => adminStore.tempProducts);
 const adminStore = useAdminStore();
