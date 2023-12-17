@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NavMobile from "~/layouts/nav/Mobile.vue";
-import NavDesktop from "~/layouts/nav/Desktop.vue";
+import NavMobile from "~/layouts/nav/Mobile.vue"
+import NavDesktop from "~/layouts/nav/Desktop.vue"
 
 </script>
 
@@ -14,6 +14,8 @@ import NavDesktop from "~/layouts/nav/Desktop.vue";
   <Login/>
 
   <Registration/>
+
+  <Donation/>
 
   <PrimeToast position="top-center" group="auth">
     <template #container="{ message, closeCallback }">

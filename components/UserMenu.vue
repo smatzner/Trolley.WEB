@@ -1,22 +1,10 @@
 <script setup lang="ts">
-const authStore = useAuthStore()
+import {useDonationStore} from "~/stores/DonationStore";
 
-// const links = computed(() => {
-//   if (authStore.isLoggedIn) {
-//     return [
-//       {label: 'Profil', route: '/'},
-//       {label: 'Einkaufslisten', route: '/shoppinglists'},
-//       {label: 'Logout', route: '/'},
-//       {label: 'Go Premium', route: '/donation'}
-//     ]
-//   } else {
-//     return [
-//       {label: 'Login', command: () => login()},
-//       {label: 'Registrieren', command: () => register()}
-//     ]
-//   }
-// })
-//
+const authStore = useAuthStore()
+const role = computed(() => authStore.role)
+const donationStore = useDonationStore()
+
 const links = computed(() => {
   let items = []
   if (!authStore.isLoggedIn) {
@@ -26,13 +14,19 @@ const links = computed(() => {
     )
     // if(authStore.)
     return items
+  } else {
+    if (role.value === 'Admin') {
+      items.push({label: 'Admin', route: '/admin'})
+    }
+    items.push(
+        {label: 'Profil', route: '/'},
+        {label: 'Einkaufslisten', route: '/shoppinglists'},
+        {label: 'Logout', route: '/'},
+        {label: 'Go Premium', command: () => goPremium()}
+    )
   }
-  return [
-    {label: 'Profil', route: '/'},
-    {label: 'Einkaufslisten', route: '/shoppinglists'},
-    {label: 'Logout', route: '/'},
-    {label: 'Go Premium', route: '/donation'}
-  ]
+
+  return items
 })
 
 
@@ -56,6 +50,11 @@ function logout() {
   toast.add({severity: 'custom', summary: 'Abmeldung erfolgreich', group: 'auth', life: 2000})
 }
 
+function goPremium() {
+  donationStore.donationDialog = true
+  emit('closeUserMenu')
+}
+
 </script>
 
 <template>
@@ -67,9 +66,13 @@ function logout() {
           <PrimeButton v-if="link.label === 'Logout'" :label="link.label" @click="logout()"
                        class="bg-trolley-primary border-trolley-primary"/>
           <NuxtLink v-else :to="link.route" @click="emit('closeUserMenu')">
-            <PrimeButton :label="link.label" class="w-full"
-                         :class="link.label === 'Go Premium' ? 'bg-gradient-to-r from-green-400 to-trolley-accent hover:from-trolley-accent hover:to-green-400 border-0' : 'bg-trolley-primary border-trolley-primary'"/>
+            <PrimeButton :label="link.label"
+                         class="w-full"
+                         @click="link.command"
+                         :class="link.label === 'Go Premium' ? 'bg-gradient-to-r from-green-400 to-trolley-accent hover:from-trolley-accent hover:to-green-400 border-0' : 'bg-trolley-primary border-trolley-primary'"
+            />
           </NuxtLink>
+
         </template>
         <PrimeButton v-else :label="link.label" @click="link.command"
                      class="bg-trolley-primary border-trolley-primary w-full"/>
