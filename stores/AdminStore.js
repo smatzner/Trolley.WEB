@@ -13,7 +13,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data } = await useFetch(`${BASE_URL}/api/Admin/GetAllUsers`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
                 }
             });
             users.value = data.value;
@@ -27,7 +27,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data } = await useFetch(`${BASE_URL}/api/Admin/GetTempProducts`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
                 }
             });
 
@@ -43,7 +43,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data, error } = await useFetch(`${BASE_URL}/api/Admin/DeleteUser?userId=${userId}`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'content-type': 'application/json'
                 }
             });
@@ -62,7 +62,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data, error } = await useFetch(`${BASE_URL}/api/Admin/GetAllUsersWithRoles`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
                 }
             });
 
@@ -83,7 +83,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data } = await useFetch(`${BASE_URL}/api/Admin/GetUserRoles?userId=${userId}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
                 }
             });
             roles.value = data.value;
@@ -98,7 +98,7 @@ export const useAdminStore = defineStore('admin', () => {
                 method: 'POST',
                 body: JSON.stringify({ userId, roleName }),
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'Content-Type': 'application/json'
                 }
             });
@@ -113,7 +113,7 @@ export const useAdminStore = defineStore('admin', () => {
                 method: 'POST',
                 body: JSON.stringify({ userId, roleName }),
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'Content-Type': 'application/json'
                 }
             });
@@ -128,7 +128,7 @@ export const useAdminStore = defineStore('admin', () => {
                 method: 'PUT',
                 body: JSON.stringify({ userId, roleName }),
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'Content-Type': 'application/json'
                 }
             });
@@ -145,7 +145,7 @@ export const useAdminStore = defineStore('admin', () => {
             await useFetch(`${BASE_URL}/api/Admin/DeleteTempProducts`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'Content-Type': 'application/json'
                 }
             });
@@ -160,7 +160,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data } = await useFetch(`${BASE_URL}/api/Admin/GetTempProducts`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
                 }
             });
             tempProducts.value = data.value;
@@ -174,7 +174,7 @@ export const useAdminStore = defineStore('admin', () => {
             const { data } = await useFetch(`${BASE_URL}/api/Admin/Get1TempProduct?tempProductId=${tempProductId}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'content-type': 'application/json'
                 }
             });
@@ -189,7 +189,7 @@ export const useAdminStore = defineStore('admin', () => {
             await useFetch(`${BASE_URL}/api/Admin/Approve1Product?tempProductId=${tempProductId}`, {
                 method: 'POST',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    Authorization: localStorage.getItem('token'),
                     'Content-Type': 'application/json'
                 }
             });
@@ -204,7 +204,7 @@ export const useAdminStore = defineStore('admin', () => {
             await useFetch(`${BASE_URL}/api/Admin/ApproveProducts`, {
                 method: 'POST',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
                 }
             });
             // Benachrichtige das Frontend über die erfolgreiche Genehmigung aller Produkte
@@ -218,7 +218,7 @@ export const useAdminStore = defineStore('admin', () => {
             await useFetch(`${BASE_URL}/api/Admin/Remove1TempProduct`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: localStorage.getItem('token')
 
                 }
             });

@@ -19,7 +19,7 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
                     method: 'POST',
                     body: JSON.stringify(shoppingList),
                     headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                        Authorization: localStorage.getItem('token')
                     }
                 })
                 resolve()
@@ -34,7 +34,7 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
             await new Promise((resolve) => {
                 useFetch(BASE_URL + '/api/ShoppingList/GetAll', {
                     headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                        Authorization: localStorage.getItem('token')
                     },
                     onResponse({response}) {
                         shoppingLists.value = response._data.shoppingLists
@@ -53,7 +53,7 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
                 useFetch(BASE_URL + `/api/ShoppingList/${shoppingListId}`, {
                     method: 'DELETE',
                     headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                        Authorization: localStorage.getItem('token')
                     }
                 })
                 resolve()
@@ -78,7 +78,7 @@ export const useShoppingListStore = defineStore('shoppingList', () => {
                     method: 'POST',
                     body: JSON.stringify(shoppingList),
                     headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                        Authorization: localStorage.getItem('token')
                     },
                     onResponse({response}) {
                         shoppingListsProducts.value = response._data
