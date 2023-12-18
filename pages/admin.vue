@@ -5,9 +5,10 @@
       <div class="flex flex-wrap align-items-center justify-content-between gap-2">
         <span class="text-xl text-900 font-bold">Temporäre Produkte</span>
       </div>
-      <PrimeColumn field="userName" header="Shopbesitzer"></PrimeColumn>
+      <PrimeColumn field="userId" header="Shopbesitzer ID"></PrimeColumn>
       <PrimeColumn field="marketName" header="Marktname"></PrimeColumn>
       <PrimeColumn field="productName" header="Produktname"></PrimeColumn>
+      <PrimeColumn field="price" header="Preis"></PrimeColumn>
       <PrimeColumn field="dateCreated" header="Erstellt am">
         <template #body="slotProps">{{ formatDate(slotProps.data.dateCreated) }}</template>
       </PrimeColumn>
@@ -15,14 +16,14 @@
       <PrimeColumn headerStyle="width: 10rem">
         <template #body="slotProps">
           <div class="flex flex-end align-items-space-between justify-content-between gap-1">
-            <PrimeButton type="button" rounded severity="info" @click="showProductInfo(slotProps)">
-              <Icon name="fa6-solid:info" severity="primary" />
+            <!-- <PrimeButton type="button" rounded class="trolley-primary" @click="showProductInfo(slotProps)">
+              <Icon name="fa6-solid:info" />
+            </PrimeButton> -->
+            <PrimeButton @click="approve1Product(slotProps)" type="button" rounded class="trolley-primary">
+              <Icon name="fa6-solid:check" />
             </PrimeButton>
             <PrimeButton @click="remove1Product(slotProps)" type="button" rounded severity="danger">
               <Icon name="fa6-solid:x" />
-            </PrimeButton>
-            <PrimeButton @click="approve1Product(slotProps)" type="button" rounded severity="success">
-              <Icon name="fa6-solid:check" />
             </PrimeButton>
           </div>
         </template>
@@ -46,7 +47,7 @@
         <template #body="slotProps">
           <div class="flex flex-end align-items-space-between justify-content-between gap-1">
             <!-- Options Button für die Rollenaktualisierung -->
-            <PrimeButton type="button" rounded severity="info" @click="showRoleDialog(slotProps.data.user.id)">
+            <PrimeButton type="button" rounded class="trolley-primary" @click="showRoleDialog(slotProps.data.user.id)">
               <Icon name="fa6-solid:gear" />
             </PrimeButton>
             <!-- Löschen-Button -->
@@ -58,22 +59,21 @@
       </PrimeColumn>
     </PrimeDataTable>
 
-    <PrimeDialog :visible="isRoleDialogVisible" @hide="closeRoleDialog">
+    <PrimeDialog v-model:visible="isRoleDialogVisible" @hide="closeRoleDialog" modal dismissable-mask closable>
       <PrimeDropdown v-model="selectedRole" :options="rolesOptions" optionLabel="name" placeholder="Rolle auswählen" />
       <PrimeButton label="Update Role" @click="updateUserRole" />
     </PrimeDialog>
   </div>
 
-  <PrimeDialog :visible="isProductInfoVisible" @hide="closeProductInfo">
-  <h3>Produktinformationen</h3>
-  <p>{{ productInfo.userName }}</p>
-  <p>{{ productInfo.marketName }}</p>
-  <p>{{ productInfo.productName }}</p>
-  <p>{{ productInfo.price }}</p>
-  <p>{{ productInfo.isOrganic }}</p>
-  <p>{{ productInfo.isDiscountProduct }}</p>
-</PrimeDialog>
-
+  <PrimeDialog v-model:visible="isProductInfoVisible" @hide="closeProductInfo" modal dismissable-mask closable>
+    <h3>Produktinformationen</h3>
+    <p>{{ productInfo.userName }}</p>
+    <p>{{ productInfo.marketName }}</p>
+    <p>{{ productInfo.productName }}</p>
+    <p>{{ productInfo.price }}</p>
+    <p>{{ productInfo.isOrganic }}</p>
+    <p>{{ productInfo.isDiscountProduct }}</p>
+  </PrimeDialog>
 </template>
 
 <script setup>
@@ -130,6 +130,7 @@ const showProductInfo = async (slotProps) => {
     console.error('Ungültige Daten: slotProps, slotProps.data oder slotProps.data.id ist undefined');
   }
 };
+
 
 
 const closeProductInfo = () => {
@@ -190,3 +191,50 @@ const formatDate = (isoDate) => {
 };
 
 </script>
+
+<style scoped>
+.card {
+  background-color: #f8f9fa;
+  /* Heller Hintergrund */
+  border: 1px solid #e0e0e0;
+  /* Feiner Rand */
+  border-radius: 8px;
+  /* Abgerundete Ecken */
+  padding: 20px;
+  /* Innenabstand */
+}
+
+.flex-wrap {
+  gap: 10px;
+  /* Verringere den Abstand */
+}
+
+.text-xl {
+  font-size: 1rem;
+  /* Kleinere Überschrift */
+}
+
+.prime-button {
+  padding: 8px 12px;
+  /* Kompaktere Buttons */
+  font-size: 0.85rem;
+  /* Kleinere Schrift in Buttons */
+}
+
+.prime-button:hover {
+  background-color: #0056b3;
+  /* Hover-Effekt für Buttons */
+  color: white;
+}
+
+.prime-dialog {
+  padding: 15px;
+  /* Innenabstand für Dialoge */
+  border-radius: 8px;
+  /* Abgerundete Ecken für Dialoge */
+}
+
+.prime-dropdown {
+  font-size: 0.85rem;
+  /* Kleinere Schrift in Dropdown */
+}</style>

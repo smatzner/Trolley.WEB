@@ -171,14 +171,19 @@ export const useAdminStore = defineStore('admin', () => {
 
     async function get1TempProduct(tempProductId) {
         try {
-            const { data } = await useFetch(`${BASE_URL}/api/Admin/Get1TempProduct?tempProductId=${tempProductId}`, {
+            const response = await useFetch(`${BASE_URL}/api/Admin/Get1TempProduct?tempProductId=${tempProductId}`, {
                 method: 'GET',
                 headers: {
                     Authorization: localStorage.getItem('token'),
                     'content-type': 'application/json'
                 }
             });
-            // Verarbeite die einzelne TempProduct-Daten
+            if (!response.ok) {
+                throw new Error(`Anfrage fehlgeschlagen mit Status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Produktgenehmigung erfolgreich:", data);
+
         } catch (e) {
             console.error(`Error getting temp product with id ${tempProductId}:`, e);
         }
@@ -186,18 +191,26 @@ export const useAdminStore = defineStore('admin', () => {
 
     async function approve1Product(tempProductId) {
         try {
-            await useFetch(`${BASE_URL}/api/Admin/Approve1Product?tempProductId=${tempProductId}`, {
+            const response = await useFetch(`${BASE_URL}/api/Admin/Approve1Product?tempProductId=${tempProductId}`, {
                 method: 'POST',
                 headers: {
                     Authorization: localStorage.getItem('token'),
                     'Content-Type': 'application/json'
                 }
             });
-            // Benachrichtige das Frontend über die erfolgreiche Genehmigung
+
+            if (!response.ok) {
+                throw new Error(`Anfrage fehlgeschlagen mit Status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Produktgenehmigung erfolgreich:", data);
+
         } catch (e) {
             console.error(`Error approving temp product with id ${tempProductId}:`, e);
         }
     }
+
+
 
     async function approveProducts() {
         try {
@@ -228,25 +241,25 @@ export const useAdminStore = defineStore('admin', () => {
     }
 
 
-        return {
-            users,
-            roles,
-            allUsersWithRoles,
-            tempProducts,
-            loadUsers,
-            getUserRoles,
-            addRoleToUser,
-            removeRoleFromUser,
-            deleteTempProducts,
-            getTempProducts,
-            get1TempProduct,
-            approve1Product,
-            approveProducts,
-            loadTempProducts,
-            getAllUsersWithRoles,
-            updateRoleForUser,
-            deleteUser,
-            remove1Product
+    return {
+        users,
+        roles,
+        allUsersWithRoles,
+        tempProducts,
+        loadUsers,
+        getUserRoles,
+        addRoleToUser,
+        removeRoleFromUser,
+        deleteTempProducts,
+        getTempProducts,
+        get1TempProduct,
+        approve1Product,
+        approveProducts,
+        loadTempProducts,
+        getAllUsersWithRoles,
+        updateRoleForUser,
+        deleteUser,
+        remove1Product
 
-        };
-    });
+    };
+});
