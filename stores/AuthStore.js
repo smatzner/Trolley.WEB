@@ -16,6 +16,9 @@ export const useAuthStore = defineStore('auth', () => {
             const {data, error} = await useFetch(`${AUTH_API_URL}Get`, {
                 headers: {
                     Authorization: token.value
+                },
+                onResponseError({response}) {
+                    localStorage.removeItem('token')
                 }
             })
 
