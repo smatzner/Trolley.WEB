@@ -226,19 +226,26 @@ export const useAdminStore = defineStore('admin', () => {
         }
     }
 
-    async function remove1Product() {
+    const remove1Product = async (tempProductId) => {
         try {
-            await useFetch(`${BASE_URL}/api/Admin/Remove1TempProduct`, {
+            const response = await useFetch(`${BASE_URL}/api/Admin/Remove1TempProduct?tempProductId=${tempProductId}`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: localStorage.getItem('token')
-
+                    Authorization: localStorage.getItem('token'),
+                    'Content-Type': 'application/json'
                 }
             });
+
+            if (!response.ok) {
+                console.error('Fehler beim Löschen des Produkts:', response);
+            } else {
+                await loadTempProducts();
+            }
         } catch (e) {
             console.error('Error removing product:', e);
         }
-    }
+    };
+
 
 
     return {
