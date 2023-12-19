@@ -130,7 +130,7 @@ function closeDialog() {
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-blue-700 mb-1">E-Mail</label>
             <PrimeInputText v-model="email" id="email" type="email" placeholder="Neue E-Mail-Adresse" class="w-full border-blue-300 rounded-md shadow-sm" />
-            <PrimeButton label="E-Mail ändern" @click="updateEmail" :loading="isUpdating" class="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" />
+            <PrimeButton label="E-Mail ändern" @click="updateEmail" :loading="isUpdating" class="mt-3 w-full bg-blue-900 text-white py-2 rounded-md hover:bg-blue-600 " />
         </div>
 
         <div class="mb-4">
@@ -141,7 +141,7 @@ function closeDialog() {
         <div class="mb-6">
             <label for="newPassword" class="block text-sm font-medium text-blue-700 ">Neues Passwort</label>
             <PrimeInputText v-model="newPassword" id="newPassword" type="password" placeholder="Neues Passwort" class="w-full border-blue-300 rounded-md shadow-sm" />
-            <PrimeButton label="Passwort ändern" @click="updatePassword" :loading="isUpdating" class="mt-3 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600" />
+            <PrimeButton label="Passwort ändern" @click="updatePassword" :loading="isUpdating" class="mt-3 w-full bg-blue-900 text-white py-2 rounded-md hover:bg-blue-600" />
         </div>
 
         <PrimeButton label="Account löschen" @click="openDialog" class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600" />
@@ -149,7 +149,7 @@ function closeDialog() {
         <PrimeDialog v-model:visible="dialogVisible" header="Account löschen" :modal="true" closable>
             <p>Möchtest du deinen Account wirklich löschen?</p>
             <template #footer>
-                <PrimeButton label="Nein" icon="pi pi-times" @click="closeDialog" class="mr-2" />
+                <PrimeButton label="Nein" icon="pi pi-times" @click="closeDialog" class="mr-2 bg-blue-900" />
                 <PrimeButton label="Ja" icon="pi pi-check" @click="confirmDelete" autofocus class="bg-red-500 text-white" />
             </template>
         </PrimeDialog>
