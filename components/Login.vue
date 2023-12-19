@@ -35,12 +35,13 @@ async function login(values: any) {
 </script>
 
 <template>
-  <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask>
+  <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask
+               class="rounded-3xl">
     <template #container="{closeCallback}">
-      <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent">
+      <div class="p-5 bg-gradient-to-r from-trolley-primary to-trolley-accent rounded-3xl">
         <PrimeMessage v-if="userErrorMessage" severity="error" class="h-12 flex"
                       :pt="{
-                          root: {class: 'bg-orange-300 text-orange-500 border-orange-500'},
+                          root: {class: 'bg-orange-300 text-orange-500 border-orange-500 border-l-8 rounded-3xl'},
                           icon: {class: 'text-orange-500'},
                           closeButton: {class: 'text-orange-500'},
                       }">
@@ -55,15 +56,16 @@ async function login(values: any) {
         >
           <VeeInputText label="E-mail" name="email" type="email"/>
 
-          <VeePassword label="Passwort" name="password" />
+          <VeePassword label="Passwort" name="password"/>
 
           <div class="flex align-items-center gap-2">
-            <PrimeButton label="Login"
-                         text
-                         class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10"
-                         type="submit"
+            <PrimeButton
+                label="Login"
+                text
+                class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10 rounded-3xl"
+                type="submit"
             />
-            <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white"/>
+            <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white rounded-3xl"/>
           </div>
 
         </VeeForm>

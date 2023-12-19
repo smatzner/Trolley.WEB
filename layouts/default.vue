@@ -19,7 +19,7 @@ import NavDesktop from "~/layouts/nav/Desktop.vue"
 
   <PrimeToast position="top-center" group="auth">
     <template #container="{ message, closeCallback }">
-      <div class="flex flex-col gap-3 p-3 w-full bg-black shadow-2 rounded-xl">
+      <div class="flex flex-col gap-3 p-3 w-full bg-black shadow-2 rounded-3xl px-5">
         <div class="flex justify-between">
           <p class="m-0 font-semibold text-base text-white">{{ message.summary }}</p>
           <PrimeButton text class="text-white p-0" @click="closeCallback">

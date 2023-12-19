@@ -39,15 +39,21 @@ async function register(values: any) {
 </script>
 
 <template>
-  <PrimeDialog v-model:visible="visible" modal :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}" dismissable-mask>
+  <PrimeDialog
+      v-model:visible="visible"
+      modal
+      class="rounded-3xl"
+      :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}"
+      dismissable-mask>
     <template #container="{closeCallback}">
-      <div class="p-5 rounded-md bg-gradient-to-r from-trolley-primary to-trolley-accent w-[400px]">
-        <PrimeMessage v-if="userErrorMessage" severity="error" class="flex"
-                      :pt="{
-                          root: {class: 'bg-orange-300 text-orange-500 border-orange-500'},
-                          icon: {class: 'text-orange-500'},
-                          closeButton: {class: 'text-orange-500'},
-                      }">
+      <div class="p-5 bg-gradient-to-r from-trolley-primary to-trolley-accent w-[400px] rounded-3xl">
+        <PrimeMessage
+            v-if="userErrorMessage" severity="error" class="flex"
+            :pt="{
+              root: {class: 'bg-orange-300 text-orange-500 border-orange-500 rounded-3xl'},
+              icon: {class: 'text-orange-500'},
+              closeButton: {class: 'text-orange-500'},
+            }">
           {{ userErrorMessage }}
         </PrimeMessage>
 
@@ -64,12 +70,18 @@ async function register(values: any) {
           <VeePassword label="Passwort bestätigen" name="confirmPassword" :immediate-validation="validate"/>
 
           <div class="flex align-items-center gap-2">
-            <PrimeButton label="Registrieren"
-                         @click="validate = true"
-                         text
-                         class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10"
-                         type="submit"/>
-            <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white"/>
+            <PrimeButton
+                label="Registrieren"
+                @click="validate = true"
+                text
+                class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10 rounded-3xl"
+                type="submit"/>
+            <PrimeButton
+                label="Abbrechen"
+                @click="closeCallback"
+                text
+                class="p-3 w-full text-white rounded-3xl"
+            />
           </div>
         </VeeForm>
       </div>

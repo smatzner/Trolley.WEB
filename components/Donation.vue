@@ -53,10 +53,11 @@ const redirectToStripeCheckout = async (sessionId, publicKey) => {
       v-model:visible="visible"
       modal
       :pt="{mask: {style: 'backdrop-filter: blur(2px)'}}"
+      class="rounded-3xl"
       dismissable-mask
   >
     <template #container="{closeCallback}">
-      <div class="px-7 pt-4 pb-2 rounded-md bg-gradient-to-r from-green-400 to-trolley-accent">
+      <div class="px-7 pt-4 pb-2 rounded-md bg-gradient-to-r from-green-400 to-trolley-accent rounded-3xl">
         <PrimeProgressBar
             v-if="isProcessing"
             mode="indeterminate"
@@ -66,7 +67,7 @@ const redirectToStripeCheckout = async (sessionId, publicKey) => {
           }"
         />
         <h1 class="text-xl font-semibold text-white">Unterstütze Trolley</h1>
-        <div class="w-80 bg-white mt-5 mb-3 p-3 rounded-md">
+        <div class="w-80 bg-white mt-5 mb-3 p-3 rounded-2xl">
           <p>Jede Spende hilft uns, unsere App zu verbessern und für alle Nutzer
             kostenlos zu halten. Deinen Beitrag macht einen großen Unterschied</p>
           <p class="mt-2">Danke für deine Unterstützung!</p>
@@ -79,6 +80,7 @@ const redirectToStripeCheckout = async (sessionId, publicKey) => {
                 id="donation-input"
                 show-buttons
                 class="w-full"
+                input-class="rounded-l-3xl"
                 @focus="whiteLabel = true"
                 @blur="!amount ? whiteLabel = false : whiteLabel = true"
                 :min="0"
@@ -87,22 +89,22 @@ const redirectToStripeCheckout = async (sessionId, publicKey) => {
                 steps="5"
                 locale="de-AT"
                 :pt="{
-                  incrementButton: {root: {class: 'bg-trolley-primary border-trolley-primary'}},
-                  decrementButton: {root: {class: 'bg-trolley-primary border-trolley-primary'}},
+                  incrementButton: {root: {class: 'bg-trolley-primary border-trolley-primary rounded-tr-3xl'}},
+                  decrementButton: {root: {class: 'bg-trolley-primary border-trolley-primary rounded-br-3xl'}},
                 }"
             />
-            <label for="donation-input" :class="whiteLabel ? 'text-white font-semibold' : 'text-gray-400'">Beitrag wählen</label>
+            <label for="donation-input" class="pl-3" :class="whiteLabel ? 'text-white font-semibold' : 'text-gray-400'">Beitrag wählen</label>
           </span>
         </div>
-        <div class="flex align-items-center gap-2">
+        <div class="flex align-items-center gap-2 mt-3">
           <PrimeButton
               @click="handleCheckout"
               label="Spenden"
               text
-              class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10"
+              class="p-3 w-full text-white border-1 border-white-alpha-30 hover:bg-white-alpha-10 rounded-3xl"
               type="submit"
           />
-          <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white"/>
+          <PrimeButton label="Abbrechen" @click="closeCallback" text class="p-3 w-full text-white rounded-3xl"/>
         </div>
       </div>
     </template>
