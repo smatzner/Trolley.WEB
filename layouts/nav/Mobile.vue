@@ -5,7 +5,7 @@ const visibleUserMenu = ref(false)
 </script>
 
 <template>
-  <PrimeToolbar class="fixed bottom-0 w-full rounded-t-2xl menubar-shadow bg-white">
+  <PrimeToolbar class="fixed bottom-0 w-full rounded-t-3xl menubar-shadow bg-white">
     <template #start>
       <NuxtLink to="/">
         <PrimeButton text rounded severity="secondary" aria-label="Home" class="place-content-center w-20">

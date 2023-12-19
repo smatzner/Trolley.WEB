@@ -23,11 +23,11 @@ defineProps({
   <VeeField :name="name" v-slot="{field, meta, errors}">
     <label class="flex flex-col m-4">
 
-      <span class="font-light text-white text-sm mb-1">{{ label }}</span>
+      <span class="font-light text-white text-sm mb-1 ms-3">{{ label }}</span>
 
       <input
           v-bind="field"
-          class="p-3 rounded-md"
+          class="p-3 rounded-md rounded-3xl"
           :class="{
                     'border-orange-400' : !meta.valid && meta.touched
                   }"
@@ -35,7 +35,7 @@ defineProps({
           :type="type"
       />
 
-      <VeeErrorMessage :name="name" as="small" class="text-orange-400 mt-1 font-medium"/>
+      <VeeErrorMessage :name="name" as="small" class="text-orange-400 mt-1 ms-3 font-medium"/>
     </label>
   </VeeField>
 </template>

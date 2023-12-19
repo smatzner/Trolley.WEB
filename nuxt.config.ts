@@ -36,7 +36,7 @@ export default defineNuxtConfig({
             ErrorMessage: 'VeeErrorMessage',
         }
     },
-    css: ['primevue/resources/themes/lara-light-blue/theme.css'],
+    css: ['primevue/resources/themes/lara-light-blue/theme.css', '@/assets/css/custom.css'],
     plugins: [
         '~/plugins/auth.js',
         '~/plugins/yupConfig.js',

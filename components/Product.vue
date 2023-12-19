@@ -23,7 +23,7 @@ const items = ref([
   {
     label: 'Bio',
     command: () => {
-      if(props.product.isDiscountProduct) props.product.isDiscountProduct = false
+      if (props.product.isDiscountProduct) props.product.isDiscountProduct = false
       props.product.isOrganic = !props.product.isOrganic
       productStore.updateProductFromShoppingList(props.product)
 
@@ -32,7 +32,7 @@ const items = ref([
   {
     label: 'Diskonter',
     command: () => {
-      if(props.product.isOrganic) props.product.isOrganic = false
+      if (props.product.isOrganic) props.product.isOrganic = false
       props.product.isDiscountProduct = !props.product.isDiscountProduct
       productStore.updateProductFromShoppingList(props.product)
     }
@@ -49,8 +49,10 @@ function removeProductFromShoppingList() {
 </script>
 
 <template>
-  <PrimeButton class="bg-trolley-primary flex-col text-white w-[6.25rem] aspect-square" @click="removeProductFromShoppingList()"
-               @contextmenu="onRightClick">
+  <PrimeButton
+      class="bg-trolley-primary flex-col text-white w-[6.25rem] aspect-square rounded-2xl"
+      @click="removeProductFromShoppingList()"
+      @contextmenu="onRightClick">
     <Icon :name="'fa6-solid:'+ product.iconName" class="text-7xl"/>
     <span class="text-xs mt-1" v-if="product.isOrganic">Bio {{ product.productName }}</span>
     <span class="text-xs mt-1" v-else-if="product.isDiscountProduct">Diskonter {{ product.productName }}</span>
@@ -71,6 +73,4 @@ function removeProductFromShoppingList() {
       <span v-else class="mx-4 my-3" v-bind="props.action">{{ item.label }}</span>
     </template>
   </PrimeContextMenu>
-
-<!--  <EditProductContextMenu :menu="menu" :product="product"/>-->
 </template>

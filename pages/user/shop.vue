@@ -1,189 +1,112 @@
 <script setup lang="ts">
-// const toast = useToast();
-//
-// const totalSize = ref(0);
-// const totalSizePercent = ref(0);
-// const files = ref([]);
-//
-// const onRemoveTemplatingFile = (file, removeFileCallback, index) => {
-//   removeFileCallback(index);
-//   totalSize.value -= parseInt(formatSize(file.size));
-//   totalSizePercent.value = totalSize.value / 10;
-// };
-//
-// const onClearTemplatingUpload = (clear) => {
-//   clear();
-//   totalSize.value = 0;
-//   totalSizePercent.value = 0;
-// };
-//
-// const onSelectedFiles = (event) => {
-//   files.value = event.files;
-//   files.value.forEach((file) => {
-//     totalSize.value += parseInt(formatSize(file.size));
-//   });
-// };
-//
-// const uploadEvent = (callback) => {
-//   totalSizePercent.value = totalSize.value / 10;
-//   callback();
-// };
-//
-// const onTemplatedUpload = () => {
-//   toast.add({severity: "info", summary: "Success", detail: "File Uploaded", life: 3000});
-// };
-//
-// const formatSize = (bytes) => {
-//   const k = 1024;
-//   const dm = 3;
-//   const sizes = this.$primevue.config.locale.fileSizeTypes;
-//
-//   if (bytes === 0) {
-//     return `0 ${sizes[0]}`;
-//   }
-//
-//   const i = Math.floor(Math.log(bytes) / Math.log(k));
-//   const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
-//
-//   return `${formattedSize} ${sizes[i]}`;
-// }
 
-async function uploadCsv(event){
-  console.log($event)
+const file = ref()
+const BASE_URL = 'https://localhost:7124'
+const authStore = useAuthStore()
+const userId = computed(() => authStore.user.id)
+const marketName = ref()
+const isDragging = ref(false)
+
+async function submitUpload() {
+  console.log(file.value)
+  let formData = new FormData()
+  formData.append('userId', userId.value)
+  formData.append('marketName', marketName.value)
+  formData.append('file', file.value)
+
+  const {data} = await useFetch(BASE_URL + '/api/Upload/Csv', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      Authorization: localStorage.getItem('token')
+    }
+  })
 }
 
+function dropFile(e: any) {
+  isDragging.value = false
+  file.value = e.dataTransfer.files[0]
+  console.log(file.value)
+}
+
+function dragOver() {
+  isDragging.value = true
+}
+
+function dragLeave() {
+  isDragging.value = false
+}
+
+function chooseFile(e: any) {
+  file.value = e.target.files[0]
+}
 </script>
 
 <template>
-  <h1>Shop Owner</h1>
-  <form>
-    <span class="p-float-label">
-      <PrimeInputText
-          id="marketName"
-      />
-      <label for="marketName">Marktname</label>
-    </span>
-    <PrimeFileUpload
-        name="demo[]"
-        url="/api/upload"
-        @upload="uploadCsv($event)"
-        :multiple="true"
-        accept=".csv"
-        :maxFileSize="1000000"
-    >
-      <template #empty>
-        <p>Drag and drop files to here to upload.</p>
-      </template>
-    </PrimeFileUpload>
-    <PrimeToast/>
-<!--    <PrimeFileUpload
-        name="demo[]"
-        url="/api/upload"
-        @upload="onTemplatedUpload($event)"
-        :multiple="true"
-        accept="csv/*"
-        :maxFileSize="1000000"
-        @select="onSelectedFiles"
-    >
-      <template #header="{ chooseCallback, uploadCallback, clearCallback, files }">
-        <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
-          <div class="flex gap-2">
-            <PrimeButton
-                @click="chooseCallback()"
-                rounded
-                class="p-0 w-[50px] h-[50px] flex justify-center"
-                outlined
-            >
-              <Icon name="prime:folder-open" size="24px"/>
-            </PrimeButton>
-            <PrimeButton
-                @click="uploadEvent(uploadCallback)"
-                rounded
-                outlined
-                severity="success"
-                class="p-0 w-[50px] h-[50px] flex justify-center"
-                :disabled="!files || files.length === 0"
-            >
-              <Icon name="prime:cloud-upload" size="24px"/>
-            </PrimeButton>
-            <PrimeButton
-                @click="clearCallback()"
-                rounded
-                outlined
-                severity="danger"
-                class="p-0 w-[50px] h-[50px] flex justify-center"
-                :disabled="!files || files.length === 0"
-            >
-              <Icon name="prime:times" size="24px"/>
-            </PrimeButton>
-          </div>
-          <PrimeProgressBar
-              :value="totalSizePercent"
-              :showValue="false"
-              :class="['md:w-20rem h-1rem w-full md:ml-auto', { 'exceeded-progress-bar': totalSizePercent > 100 }]"
-          >
-            <span class="white-space-nowrap">{{ totalSize }}B / 1Mb</span>
-          </PrimeProgressBar>
-        </div>
-      </template>
-      <template #content="{ files, uploadedFiles, removeUploadedFileCallback, removeFileCallback }">
-        <div v-if="files.length > 0">
-          <h5>Pending</h5>
-          <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-            <div v-for="(file, index) of files" :key="file.name + file.type + file.size"
-                 class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
-              <div>
-                <img role="presentation" :alt="file.name" :src="file.objectURL" width="100" height="50"
-                     class="shadow-2"/>
-              </div>
-              <span class="font-semibold">{{ file.name }}</span>
-              <div>{{ formatSize(file.size) }}</div>
-              <PrimeBadge value="Pending" severity="warning"/>
-              <PrimeButton
-                  @click="onRemoveTemplatingFile(file, removeFileCallback, index)"
-                  outlined
-                  rounded
-                  class="p-0 w-[50px] h-[50px] flex justify-center"
-                  severity="danger"
-              >
-                <Icon name="prime:times" size="24px"/>
-              </PrimeButton>
-            </div>
-          </div>
-        </div>
+  <div class="flex justify-center">
+    <form @submit.prevent="submitUpload" class="w-[330px] p-5 bg-white shadow-2xl rounded-2xl border-0">
+      <div class="mx-auto mt-3">
+        <span class="p-float-label">
+          <PrimeInputText
+              id="marketName"
+              v-model="marketName"
+          />
+          <label for="marketName">Marktname</label>
+        </span>
+      </div>
 
-        <div v-if="uploadedFiles.length > 0">
-          <h5>Completed</h5>
-          <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-            <div v-for="(file, index) of uploadedFiles" :key="file.name + file.type + file.size"
-                 class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
-              <div>
-                <img role="presentation" :alt="file.name" :src="file.objectURL" width="100" height="50"
-                     class="shadow-2"/>
-              </div>
-              <span class="font-semibold">{{ file.name }}</span>
-              <div>{{ formatSize(file.size) }}</div>
-              <PrimeBadge value="Completed" class="mt-3" severity="success"/>
-              <PrimeButton
-                  @click="removeUploadedFileCallback(index)"
-                  outlined
-                  rounded
-                  severity="danger"
-              >
-                <Icon name="prime:times" size="24px"/>
-              </PrimeButton>
-            </div>
+      <label
+          for="dropzone-file"
+          class="mt-5 flex flex-col items-center justify-center w-full aspect-square border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+          @drop.prevent="dropFile($event)"
+          @dragover.prevent="dragOver"
+          @dragleave="dragLeave"
+      >
+        <template v-if="file">
+          <PrimeCard class="bg-white p-5 rounded-2xl shadow w-44 relative" unstyled>
+            <template #header>
+              <PrimeBadge
+                  unstyled
+                  class="absolute -top-2 -right-2 rounded-full bg-red-600 w-7 h-7 flex justify-center items-center"
+                  @click.prevent="file = null">
+                <Icon name="fa6-solid:xmark" class="text-white"/>
+              </PrimeBadge>
+            </template>
+            <template #content>
+              <PrimeImage src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Logo_CSV.svg" alt="Image"/>
+              <span class="text-xs">{{ file.name }}</span>
+            </template>
+          </PrimeCard>
+        </template>
+        <template v-else>
+          <div v-if="!isDragging" class="flex flex-col items-center justify-center pt-5 pb-6">
+            <Icon name="fa6-solid:cloud-arrow-up" size="50" class="mb-5"/>
+            <p class="mb-2 text-sm text-gray-500 font-semibold">
+              Klicken um Produktliste hochzuladen
+            </p>
+            <p class="text-xs text-gray-500">oder Produktliste ins Feld ziehen</p>
           </div>
-        </div>
-      </template>
-      <template #empty>
-        <div class="grid justify-items-center">
-          <Icon name="prime:cloud-upload" size="100px" class="border-2 rounded-full p-5 w-[160px] h-[160px]"/>
-          <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
-        </div>
-      </template>
-    </PrimeFileUpload>-->
-  </form>
+          <div v-else class="flex flex-col items-center justify-center pt-5 pb-6">
+            <Icon name="fa6-solid:cloud-arrow-down" size="50" class="mb-5"/>
+            <p class="mb-2 text-sm text-gray-500">
+              Produktliste zum hochladen hier loslassen
+            </p>
+            <p></p>
+          </div>
+        </template>
+
+        <input id="dropzone-file" type="file" class="hidden" @change="chooseFile($event)"/>
+      </label>
+      <PrimeButton
+          type="submit"
+          label="Hochladen"
+          size="small"
+          class="float-right mt-5 bg-trolley-primary border-trolley-primary"
+      />
+
+    </form>
+  </div>
+
 </template>
 
 <style scoped>
