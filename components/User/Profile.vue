@@ -121,33 +121,30 @@ function closeDialog() {
 </script>
 
 <template>
-    <div class="max-w-md mx-auto">
-        <h2 class="text-2xl font-semibold text-center mb-6">Userprofil</h2>
-
-        <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
-            <PrimeInputText v-model="email" id="email" type="email" placeholder="Neue E-Mail-Adresse"
-                class="w-full border-gray-300 rounded-md shadow-sm" />
-            <PrimeButton label="E-Mail ändern" @click="updateEmail" :loading="isUpdating"
-                class="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" />
+    <div class="max-w-md mx-auto p-5 bg-blue-100 rounded-lg shadow-lg">
+        <div class="text-center">
+            <PrimeAvatar image="/TrolleyLogo.png" size="xlarge" shape="circle" class="inline-block border-4 border-blue-500 shadow-lg" />
+            <h2 class="text-2xl font-semibold text-blue-600">Userprofil</h2>
         </div>
 
         <div class="mb-4">
-            <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Aktuelles Passwort</label>
-            <PrimeInputText v-model="currentPassword" id="currentPassword" type="password" placeholder="Aktuelles Passwort"
-                class="w-full border-gray-300 rounded-md shadow-sm" />
+            <label for="email" class="block text-sm font-medium text-blue-700 mb-1">E-Mail</label>
+            <PrimeInputText v-model="email" id="email" type="email" placeholder="Neue E-Mail-Adresse" class="w-full border-blue-300 rounded-md shadow-sm" />
+            <PrimeButton label="E-Mail ändern" @click="updateEmail" :loading="isUpdating" class="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" />
+        </div>
+
+        <div class="mb-4">
+            <label for="currentPassword" class="block text-sm font-medium text-blue-700">Aktuelles Passwort</label>
+            <PrimeInputText v-model="currentPassword" id="currentPassword" type="password" placeholder="Aktuelles Passwort" class="w-full border-blue-300 rounded-md shadow-sm" />
         </div>
 
         <div class="mb-6">
-            <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">Neues Passwort</label>
-            <PrimeInputText v-model="newPassword" id="newPassword" type="password" placeholder="Neues Passwort"
-                class="w-full border-gray-300 rounded-md shadow-sm" />
-            <PrimeButton label="Passwort ändern" @click="updatePassword" :loading="isUpdating"
-                class="mt-3 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600" />
+            <label for="newPassword" class="block text-sm font-medium text-blue-700 ">Neues Passwort</label>
+            <PrimeInputText v-model="newPassword" id="newPassword" type="password" placeholder="Neues Passwort" class="w-full border-blue-300 rounded-md shadow-sm" />
+            <PrimeButton label="Passwort ändern" @click="updatePassword" :loading="isUpdating" class="mt-3 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600" />
         </div>
 
-        <PrimeButton label="Account löschen" @click="openDialog"
-            class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600" />
+        <PrimeButton label="Account löschen" @click="openDialog" class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600" />
 
         <PrimeDialog v-model:visible="dialogVisible" header="Account löschen" :modal="true" closable>
             <p>Möchtest du deinen Account wirklich löschen?</p>
@@ -158,6 +155,7 @@ function closeDialog() {
         </PrimeDialog>
     </div>
 </template>
+
   
   
 <style scoped>
