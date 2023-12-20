@@ -5,7 +5,6 @@
       <div class="flex flex-wrap align-items-center justify-content-between gap-2">
         <span class="text-xl text-900 font-bold">Temporäre Produkte</span>
       </div>
-      <PrimeColumn field="userName" header="Shopbesitzer"></PrimeColumn>
       <PrimeColumn field="marketName" header="Marktname"></PrimeColumn>
       <PrimeColumn field="productName" header="Produktname"></PrimeColumn>
       <PrimeColumn field="dateCreated" header="Erstellt am">
@@ -15,13 +14,10 @@
       <PrimeColumn headerStyle="width: 10rem">
         <template #body="slotProps">
           <div class="flex flex-end align-items-space-between justify-content-between gap-1">
-            <PrimeButton type="button" rounded severity="info" @click="showProductInfo(slotProps)">
-              <Icon name="fa6-solid:info" severity="primary" />
-            </PrimeButton>
             <PrimeButton @click="remove1Product(slotProps)" type="button" rounded severity="danger">
               <Icon name="fa6-solid:x" />
             </PrimeButton>
-            <PrimeButton @click="approve1Product(slotProps)" type="button" rounded severity="success">
+            <PrimeButton @click="approve1Product(slotProps)" type="button" rounded class="bg-trolley-primary">
               <Icon name="fa6-solid:check" />
             </PrimeButton>
           </div>
@@ -46,7 +42,7 @@
         <template #body="slotProps">
           <div class="flex flex-end align-items-space-between justify-content-between gap-1">
             <!-- Options Button für die Rollenaktualisierung -->
-            <PrimeButton type="button" rounded severity="info" @click="showRoleDialog(slotProps.data.user.id)">
+            <PrimeButton type="button" rounded class="bg-trolley-primary" @click="showRoleDialog(slotProps.data.user.id)">
               <Icon name="fa6-solid:gear" />
             </PrimeButton>
             <!-- Löschen-Button -->
@@ -58,26 +54,19 @@
       </PrimeColumn>
     </PrimeDataTable>
 
-    <PrimeDialog :visible="isRoleDialogVisible" @hide="closeRoleDialog">
-      <PrimeDropdown v-model="selectedRole" :options="rolesOptions" optionLabel="name" placeholder="Rolle auswählen" />
-      <PrimeButton label="Update Role" @click="updateUserRole" />
+    <PrimeDialog :visible="isRoleDialogVisible" @click="closeRoleDialog" modal dismissable-mask>
+    <div>
+      <PrimeDropdown v-model="selectedRole" :options="rolesOptions" optionLabel="name" placeholder="Rolle auswählen" class="mr-2" />
+      <PrimeButton label="Update Role" @click="updateUserRole" class="bg-trolley-primary" />
+    </div>
     </PrimeDialog>
   </div>
-
-  <PrimeDialog :visible="isProductInfoVisible" @hide="closeProductInfo">
-  <h3>Produktinformationen</h3>
-  <p>{{ productInfo.userName }}</p>
-  <p>{{ productInfo.marketName }}</p>
-  <p>{{ productInfo.productName }}</p>
-  <p>{{ productInfo.price }}</p>
-  <p>{{ productInfo.isOrganic }}</p>
-  <p>{{ productInfo.isDiscountProduct }}</p>
-</PrimeDialog>
 
 </template>
 
 <script setup>
 import { useAdminStore } from '@/stores/AdminStore';
+import Toast from 'primevue/toast';
 
 definePageMeta({
   middleware: 'admin'
@@ -92,6 +81,8 @@ const currentUserId = ref('');
 const isRoleDialogVisible = ref(false);
 const isProductInfoVisible = ref(false);
 const productInfo = ref({});
+const toast = useToast();
+
 
 const rolesOptions = [
   { name: 'User', value: 'User' },
@@ -140,6 +131,7 @@ const approve1Product = async (slotProps) => {
   if (slotProps && slotProps.data) {
     await adminStore.approve1Product(slotProps.data.id);
     await adminStore.loadTempProducts();
+    await toast.add({ severity: 'success', summary: 'Produkt freigegeben', group: 'auth', life: 3000 })
   } else {
     console.error('slotProps oder slotProps.data ist undefined');
   }
@@ -149,6 +141,7 @@ const remove1Product = async (slotProps) => {
   if (slotProps && slotProps.data) {
     await adminStore.remove1Product(slotProps.data.id);
     await adminStore.loadTempProducts();
+    await toast.add({ severity: 'custom', summary: 'Produkt gelöscht', group: 'auth', life: 3000 })
   } else {
     console.error('slotProps oder slotProps.data ist undefined');
   }

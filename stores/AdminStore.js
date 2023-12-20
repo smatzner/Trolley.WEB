@@ -207,46 +207,45 @@ export const useAdminStore = defineStore('admin', () => {
                     Authorization: localStorage.getItem('token')
                 }
             });
-            // Benachrichtige das Frontend über die erfolgreiche Genehmigung aller Produkte
         } catch (e) {
             console.error('Error approving products:', e);
         }
     }
 
-    async function remove1Product() {
+    async function remove1Product(productId) {
         try {
-            await useFetch(`${BASE_URL}/api/Admin/Remove1TempProduct`, {
+            await useFetch(`${BASE_URL}/api/Admin/Remove1TempProduct?tempProductId=${productId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: localStorage.getItem('token')
-
                 }
             });
         } catch (e) {
             console.error('Error removing product:', e);
         }
     }
+    
+    
 
+    return {
+        users,
+        roles,
+        allUsersWithRoles,
+        tempProducts,
+        loadUsers,
+        getUserRoles,
+        addRoleToUser,
+        removeRoleFromUser,
+        deleteTempProducts,
+        getTempProducts,
+        get1TempProduct,
+        approve1Product,
+        approveProducts,
+        loadTempProducts,
+        getAllUsersWithRoles,
+        updateRoleForUser,
+        deleteUser,
+        remove1Product
 
-        return {
-            users,
-            roles,
-            allUsersWithRoles,
-            tempProducts,
-            loadUsers,
-            getUserRoles,
-            addRoleToUser,
-            removeRoleFromUser,
-            deleteTempProducts,
-            getTempProducts,
-            get1TempProduct,
-            approve1Product,
-            approveProducts,
-            loadTempProducts,
-            getAllUsersWithRoles,
-            updateRoleForUser,
-            deleteUser,
-            remove1Product
-
-        };
-    });
+    };
+});
