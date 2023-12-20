@@ -5,7 +5,7 @@ const productsInShoppingList = computed(() => productStore.productsInShoppingLis
 const categories = computed(() => productStore.categories)
 const costsPerMarket = computed(() => productStore.costsPerMarket)
 
-const marketItems = ref(costsPerMarket.value.map(market => ({marketName: market.marketName})))
+const marketItems = computed(() => costsPerMarket.value.map(market => ({marketName: market.marketName})))
 const selectedMarket = ref()
 const totalPrice = ref(0)
 
@@ -19,23 +19,28 @@ const shoppingListName = ref({
 })
 
 const toast = useToast()
-const bouncingElement = ref(false)
+const priceChanged = ref(0)
 
 watch(costsPerMarket, () => {
   if (costsPerMarket.value.length > 0) {
     selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
-
-    if(totalPrice.value > 0){
-      bouncingElement.value = true
-      setTimeout(() => {
-        bouncingElement.value = false
-      }, 2000)
-    }
-
     totalPrice.value = Math.round(costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).totalPrice * 100) / 100
+    priceChanged.value++
   } else {
     selectedMarket.value = ''
     totalPrice.value = 0
+  }
+})
+
+
+const bouncingElement = ref(false)
+
+watch(selectedMarket, () => {
+  if(priceChanged.value > 1){
+    bouncingElement.value = true
+    setTimeout(() => {
+      bouncingElement.value = false
+    }, 2500)
   }
 })
 
@@ -59,7 +64,6 @@ async function saveShoppingList() {
 }
 
 function updatePrice() {
-  console.log(selectedMarket.value)
   costsPerMarket.value.find((market) => {
     if (market.marketName === selectedMarket.value) {
       totalPrice.value = Math.round(market.totalPrice * 100) / 100
@@ -92,7 +96,7 @@ function updatePrice() {
   <PrimeSpeedDial
       :model="items"
       direction="left"
-      class="fixed right-5 drop-shadow-2xl"
+      class="fixed right-5 drop-shadow-md"
       :class="$device.isMobile ? 'bottom-[100px]' : 'bottom-5'"
       buttonClass="bg-trolley-primary border-trolley-primary"
       :rotateAnimation="false"
@@ -103,8 +107,10 @@ function updatePrice() {
       <Icon name="fa6-solid:cart-shopping"/>
     </template>
     <template #item="{item}">
-      <PrimeInputGroup v-if="item.label === 'Gesamtkosten'"
-                       :class="bouncingElement ? 'animate-bounce' : 'animate-none'">
+      <PrimeInputGroup
+          v-if="item.label === 'Gesamtkosten'"
+          :class="bouncingElement ? 'animate-bounce' : 'animate-none'"
+      >
         <PrimeDropdown
             v-model="selectedMarket"
             optionValue="marketName"
@@ -115,7 +121,13 @@ function updatePrice() {
             text
             rounded
             raised
-            panelClass="rounded-3xl"
+            panelClass="rounded-3xl "
+            :pt="{
+              item: ({context}) => ({
+                class: context.selected ? 'bg-trolley-primary text-white last:rounded-b-3xl first:rounded-t-3xl' : context.focused ? 'bg-blue-100' : 'first:rounded-t-3xl last:rounded-b-3xl'
+              }),
+              list: {class: 'p-0'}
+            }"
         />
         <PrimeInputGroupAddon class="rounded-r-3xl">{{ totalPrice }} €</PrimeInputGroupAddon>
       </PrimeInputGroup>

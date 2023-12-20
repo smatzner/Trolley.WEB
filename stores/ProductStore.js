@@ -6,11 +6,7 @@ export const useProductStore = defineStore('product', () => {
         const productsInShoppingList = useState('productsInShoppingList', () => [])
         const categories = useState('categories', () => [])
         const shoppingList = useState('shoppingList', () => [])
-        const costsPerMarket = useState('costsPerMarket', () => [
-            {"marketName": "Billa", "totalPrice": 0},
-            {"marketName": "Spar", "totalPrice": 0},
-            {"marketName": "Hofer", "totalPrice": 0}
-        ])
+        const costsPerMarket = useState('costsPerMarket', () => [])
 
         async function loadProducts() {
             await new Promise((resolve) => {
@@ -32,7 +28,7 @@ export const useProductStore = defineStore('product', () => {
                     productsInShoppingList.value.push({...matchingProduct, amount: productInShoppingList.amount})
                 })
                 getCategories()
-                await AddProductsAndCalculateList(shoppingList.value)
+                await addProductsAndCalculateList(shoppingList.value)
             }
         }
 
@@ -64,7 +60,7 @@ export const useProductStore = defineStore('product', () => {
                     })
                 })
 
-                await AddProductsAndCalculateList(shoppingList.value)
+                await addProductsAndCalculateList(shoppingList.value)
 
                 getCategories()
             } catch (e) {
@@ -72,7 +68,7 @@ export const useProductStore = defineStore('product', () => {
             }
         }
 
-        async function updateProductFromShoppingList(updatedProduct){
+        async function updateProductFromShoppingList(updatedProduct) {
             const productIndex = productsInShoppingList.value.findIndex(product => product.productId === updatedProduct.productId)
             console.log(productsInShoppingList.value)
             productsInShoppingList.value.splice(productIndex, 1)
@@ -87,10 +83,14 @@ export const useProductStore = defineStore('product', () => {
 
             productsInShoppingList.value.splice(productIndex, 1)
             shoppingList.value.splice(productIndex, 1)
-            localStorage.setItem('shoppingList', JSON.stringify(shoppingList.value))
+            if (shoppingList.value.length > 0) {
+                localStorage.setItem('shoppingList', JSON.stringify(shoppingList.value))
+            } else {
+                localStorage.removeItem('shoppingList')
+            }
 
             getCategories()
-            await AddProductsAndCalculateList(shoppingList.value)
+            await addProductsAndCalculateList(shoppingList.value)
         }
 
         function getCategories() {
@@ -105,12 +105,17 @@ export const useProductStore = defineStore('product', () => {
                 .map(categoryId => categoriesMap.get(categoryId));
         }
 
-        async function AddProductsAndCalculateList(products) {
-            const {data} = await useFetch(BASE_URL + '/api/TemporaryShoppingList/AddProductAndCalculateList', {
-                method: 'POST',
-                body: JSON.stringify(products),
+        async function addProductsAndCalculateList(products) {
+            await new Promise((resolve) => {
+                useFetch(BASE_URL + '/api/TemporaryShoppingList/AddProductAndCalculateList', {
+                    method: 'POST',
+                    body: JSON.stringify(products),
+                    onResponse({response}) {
+                        costsPerMarket.value = response._data
+                        resolve()
+                    }
+                })
             })
-            costsPerMarket.value = data
         }
 
         return {
