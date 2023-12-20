@@ -2,9 +2,19 @@
 
 const visibleSearchField = ref(false)
 const visibleUserMenu = ref(false)
+
+const route = useRoute()
+const currentRoute = computed(() => route.path)
+
+function toggleSearchField(){
+  visibleSearchField.value = true
+  if(currentRoute.value !== '/') navigateTo('/')
+}
+
 </script>
 
 <template>
+
   <PrimeToolbar class="fixed bottom-0 w-full rounded-t-3xl menubar-shadow bg-white">
     <template #start>
       <NuxtLink to="/">
@@ -15,7 +25,7 @@ const visibleUserMenu = ref(false)
     </template>
     <template #center>
       <PrimeButton text rounded severity="secondary" aria-label="Suche" class="place-content-center w-20"
-        @click="visibleSearchField = true">
+        @click="toggleSearchField()">
         <Icon name="fa6-solid:magnifying-glass" class="text-lg"></Icon>
       </PrimeButton>
     </template>
