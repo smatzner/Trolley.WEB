@@ -19,10 +19,19 @@ const shoppingListName = ref({
 })
 
 const toast = useToast()
+const bouncingElement = ref(false)
 
 watch(costsPerMarket, () => {
   if (costsPerMarket.value.length > 0) {
     selectedMarket.value = costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).marketName
+
+    if(totalPrice.value > 0){
+      bouncingElement.value = true
+      setTimeout(() => {
+        bouncingElement.value = false
+      }, 2000)
+    }
+
     totalPrice.value = Math.round(costsPerMarket.value.reduce((prev, curr) => prev.totalPrice < curr.totalPrice ? prev : curr).totalPrice * 100) / 100
   } else {
     selectedMarket.value = ''
@@ -80,15 +89,22 @@ function updatePrice() {
     </div>
   </PrimeFieldset>
 
-  <PrimeSpeedDial :model="items" direction="left" class="fixed right-5 drop-shadow-2xl"
-                  :class="$device.isMobile ? 'bottom-[100px]' : 'bottom-5'"
-                  buttonClass="bg-trolley-primary border-trolley-primary" :rotateAnimation="false"
-                  :hideOnClickOutside="false" :visible="!$device.isMobile">
+  <PrimeSpeedDial
+      :model="items"
+      direction="left"
+      class="fixed right-5 drop-shadow-2xl"
+      :class="$device.isMobile ? 'bottom-[100px]' : 'bottom-5'"
+      buttonClass="bg-trolley-primary border-trolley-primary"
+      :rotateAnimation="false"
+      :hideOnClickOutside="false"
+      :visible="!$device.isMobile"
+  >
     <template #icon>
       <Icon name="fa6-solid:cart-shopping"/>
     </template>
     <template #item="{item}">
-      <PrimeInputGroup v-if="item.label === 'Gesamtkosten'">
+      <PrimeInputGroup v-if="item.label === 'Gesamtkosten'"
+                       :class="bouncingElement ? 'animate-bounce' : 'animate-none'">
         <PrimeDropdown
             v-model="selectedMarket"
             optionValue="marketName"
