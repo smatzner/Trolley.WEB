@@ -17,7 +17,14 @@ import NavDesktop from "~/layouts/nav/Desktop.vue"
 
   <Donation/>
 
-  <PrimeToast position="top-center" group="auth">
+  <PrimeToast
+      position="top-center"
+      group="auth"
+      :pt="{
+        root: {class : 'rounded-3xl md:w-96 w-5/6'},
+        container: {class: 'rounded-3xl'}
+      }"
+  >
     <template #container="{ message, closeCallback }">
       <div class="flex flex-col gap-3 p-3 w-full bg-black shadow-2 rounded-3xl px-5">
         <div class="flex justify-between">

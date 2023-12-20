@@ -26,7 +26,6 @@ async function login(values: any) {
     visible.value = false
     toast.add({severity: 'custom', summary: 'Login erfolgreich', group: 'auth', life: 2000})
   } catch (e: any) {
-    console.error(e)// TODO: validation
     userErrorMessage.value = 'Email oder Passwort inkorrekt'
   }
 }
