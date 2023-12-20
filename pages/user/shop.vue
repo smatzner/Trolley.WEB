@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'shop-owner'
+})
 
 const file = ref()
 const BASE_URL = 'https://localhost:7124'

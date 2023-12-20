@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware(() => {
     const user = computed(() => authStore.user)
 
     if (user.value) {
-        if (user.value.role !== "ShopOwner" || user.value.role !== "Admin") {
+        if (user.value.role !== "ShopOwner" && user.value.role !== "Admin") {
             throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
         }
     } else {
