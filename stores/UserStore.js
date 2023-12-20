@@ -103,12 +103,23 @@ export const useUserStore = defineStore('user', () => {
     return response.data;
   }
 
+  async function updateUserRole(userId, roleName){
+    await useFetch(`${BASE_URL}/api/AppUser/UpdateRole`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': localStorage.getItem('token')
+      },
+      body: JSON.stringify({ userId, roleName })
+    })
+  }
+
   return {
     user,
     loadUser,
     updateEmail,
     updateEmail2,
     updatePassword,
-    deleteUser
+    deleteUser,
+    updateUserRole
   };
 });

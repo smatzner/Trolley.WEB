@@ -12,7 +12,6 @@ const links = computed(() => {
         {label: 'Login', command: () => login()},
         {label: 'Registrieren', command: () => register()}
     )
-    // if(authStore.)
     return items
   } else {
     if (role.value === 'Admin') {
@@ -22,8 +21,10 @@ const links = computed(() => {
         {label: 'Profil', route: '/user/profile'},
         {label: 'Einkaufslisten', route: '/shoppinglists'},
         {label: 'Logout', route: '/'},
-        {label: 'Go Premium', command: () => goPremium()}
     )
+    if(role.value === 'User'){
+      items.push({label: 'Go Premium', command: () => goPremium()})
+    }
   }
 
   return items
@@ -63,13 +64,15 @@ function goPremium() {
     <div class="mx-auto grid content-center gap-4 w-2/3 h-full">
       <template v-for="link in links">
         <template v-if="authStore.isLoggedIn">
-          <PrimeButton v-if="link.label === 'Logout'" :label="link.label" @click="logout()"
-                       class="bg-trolley-primary border-trolley-primary rounded-3xl"/>
+          <NuxtLink :to="link.route" v-if="link.label === 'Logout'" @click="logout()">
+            <PrimeButton :label="link.label" class="bg-trolley-primary border-trolley-primary w-full rounded-3xl"/>
+          </NuxtLink>
           <NuxtLink v-else :to="link.route" @click="emit('closeUserMenu')">
-            <PrimeButton :label="link.label"
-                         class="w-full rounded-3xl"
-                         @click="link.command"
-                         :class="link.label === 'Go Premium' ? 'bg-gradient-to-r from-green-400 to-trolley-accent hover:from-trolley-accent hover:to-green-400 border-0' : 'bg-trolley-primary border-trolley-primary'"
+            <PrimeButton
+                :label="link.label"
+                class="w-full rounded-3xl"
+                @click="link.command"
+                :class="link.label === 'Go Premium' ? 'bg-gradient-to-r from-green-400 to-trolley-accent hover:from-trolley-accent hover:to-green-400 border-0' : 'bg-trolley-primary border-trolley-primary'"
             />
           </NuxtLink>
 

@@ -1,40 +1,46 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-300 to-blue-200 p-6 rounded-xl animate-fadeIn">
-    <div class="p-6 bg-white rounded-xl shadow-xl transition duration-300 ease-in-out hover:shadow-2xl">
-      <PrimeImage src="/donation-trolley2.png" alt="Trolley sagt Danke!" width="250"/>
-    </div>
-    
-    <h3 class="text-4xl font-extrabold text-gray-900 mt-10 mb-6">Danke für Ihre Spende!</h3>
-    <p class="text-lg text-center text-blue-1000 mb-8">
-      Sie haben erfolgreich gespendet und sind jetzt ein <b>Premium User</b>. Vielen Dank für Ihre großzügige Unterstützung!
-    </p>
-    <div class="text-2xl font-semibold text-blue-800 mb-4" v-text="countdown"></div>
+  <div class="flex flex-col items-center justify-center p-6 rounded-xl animate-fadeIn">
+    <PrimeImage
+        src="/donation-trolley2.png"
+        alt="Trolley sagt Danke!"
+        width="220"
+        :pt="{
+          image: {class: 'rounded-3xl shadow-lg'}
+        }"
+    />
 
-   
+    <h3 class="text-4xl font-extrabold text-gray-900 mt-10 mb-6"><span class="text-trolley-primary">Danke</span> für Ihre Spende!</h3>
+    <p class="text-lg text-center text-gray-700 mb-8">
+      Sie haben erfolgreich gespendet und sind jetzt ein <span class="font-bold text-trolley-primary">Premium User</span>. Vielen Dank für Ihre großzügige
+      Unterstützung!
+    </p>
+    <p class="text-gray-700">Du wirst in <span class="mt-5 italic font-semibold text-trolley-primary mb-4" v-text="countdown"/> Sekunden automatisch auf die <NuxtLink to="/" class="underline text-trolley-primary">Startseite</NuxtLink> zurückgeleitet</p>
   </div>
 </template>
 
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-
 const route = useRoute();
-const router = useRouter();
 const sessionId = ref('');
 
-const countdown = ref(5000);
+const countdown = ref(10);
 let countdownInterval = null;
 
-onMounted(() => {
+const userStore = useUserStore()
+const authStore = useAuthStore()
+const userId = computed(() => authStore.user.id)
+
+onMounted( async() => {
   sessionId.value = route.query.session_id;
-  completeDonation();
+  await completeDonation();
   startCountdown();
 });
 
 const completeDonation = async () => {
-  // ... Deine vorhandene Logik ...
-};
+  console.log(userId.value)
+  await userStore.updateUserRole(userId.value,'PremiumUser')
+  await authStore.initializeStore()
+}
 
 const startCountdown = () => {
   countdownInterval = setInterval(() => {
@@ -42,7 +48,7 @@ const startCountdown = () => {
       countdown.value--;
     } else {
       clearInterval(countdownInterval);
-      router.push('/'); // Navigiere zur Startseite
+      navigateTo('/');
     }
   }, 1000);
 };
@@ -56,8 +62,12 @@ watch(() => route.query.session_id, () => {
 
 <style>
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .animate-fadeIn {
