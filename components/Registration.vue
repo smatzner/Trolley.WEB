@@ -31,7 +31,7 @@ async function register(values: any) {
   try {
     await authStore.register(values.email, values.password)
     visible.value = false
-    toast.add({severity: 'cusotm', summary: 'Registrierung erfolgreich', group: 'auth', life: 2000})
+    toast.add({severity: 'custom', summary: 'Registrierung erfolgreich', group: 'auth', life: 2000})
   } catch (e: any) {
     userErrorMessage.value = e
   }
@@ -87,5 +87,4 @@ async function register(values: any) {
       </div>
     </template>
   </PrimeDialog>
-  <PrimeToast/>
 </template>
