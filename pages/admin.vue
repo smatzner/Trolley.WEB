@@ -54,14 +54,23 @@
       </PrimeColumn>
     </PrimeDataTable>
 
-    <PrimeDialog :visible="isRoleDialogVisible" @click="closeRoleDialog" modal dismissable-mask>
-    <div>
-      <PrimeDropdown v-model="selectedRole" :options="rolesOptions" optionLabel="name" placeholder="Rolle auswählen" class="mr-2" />
-      <PrimeButton label="Update Role" @click="updateUserRole" class="bg-trolley-primary" />
-    </div>
+    <PrimeDialog v-model:visible="isRoleDialogVisible" @hide="closeRoleDialog" modal class="rounded-3xl"
+      :pt="{ mask: { style: 'backdrop-filter: blur(2px)' } }" dismissable-mask>
+      <template #container="{ closeCallback }">
+        <div class="p-5 bg-gradient-to-r from-trolley-primary to-trolley-accent w-[400px] rounded-3xl">
+          <PrimeDropdown v-model="selectedRole" :options="rolesOptions" optionLabel="name" placeholder="Rolle auswählen"
+            class="w-full mb-4 bg-white text-gray-700 rounded-3xl" />
+
+          <div class="flex align-items-center gap-2">
+            <PrimeButton label="Rolle aktualisieren" @click="updateUserRole"
+              class="p-3 w-full text-white bg-trolley-primary hover:bg-trolley-accent rounded-3xl" type="button" />
+            <PrimeButton label="Abbrechen" @click="closeCallback"
+              class="p-3 w-full text-white bg-red-500 hover:bg-red-400 rounded-3xl" />
+          </div>
+        </div>
+      </template>
     </PrimeDialog>
   </div>
-
 </template>
 
 <script setup>
