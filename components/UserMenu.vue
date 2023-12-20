@@ -17,7 +17,7 @@ const links = computed(() => {
     if (role.value === 'Admin') {
       items.push({label: 'Admin', route: '/admin'})
     }
-    if (role.value === 'ShopOwner' || role.value === 'Admin'){
+    if (role.value === 'ShopOwner' || role.value === 'Admin') {
       items.push({label: 'Shop', route: '/user/shop'})
     }
     items.push(
@@ -25,7 +25,7 @@ const links = computed(() => {
         {label: 'Einkaufslisten', route: '/shoppinglists'},
         {label: 'Logout', route: '/'},
     )
-    if(role.value === 'User'){
+    if (role.value === 'User') {
       items.push({label: 'Go Premium', command: () => goPremium()})
     }
   }
@@ -80,8 +80,12 @@ function goPremium() {
           </NuxtLink>
 
         </template>
-        <PrimeButton v-else :label="link.label" @click="link.command"
-                     class="bg-trolley-primary border-trolley-primary w-full rounded-3xl"/>
+        <PrimeButton
+            v-else
+            :label="link.label"
+            @click="link.command"
+            class="bg-trolley-primary border-trolley-primary w-full rounded-3xl"
+        />
       </template>
     </div>
   </PrimeSidebar>

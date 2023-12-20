@@ -130,7 +130,7 @@ function closeDialog() {
 </script>
 
 <template>
-    <div class="max-w-md mx-auto p-5 bg-white rounded-lg shadow-lg">
+    <div class="max-w-md mx-auto p-5 bg-white rounded-3xl shadow-lg">
         <div class="text-center">
             <PrimeAvatar image="/TrolleyLogo.png" size="xlarge" shape="circle"
                 class="inline-block border-4 border-trolley-primary shadow-lg" />
