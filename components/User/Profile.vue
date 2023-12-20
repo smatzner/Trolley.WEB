@@ -164,14 +164,22 @@ function closeDialog() {
         <PrimeButton label="Account löschen" severity="danger" @click="openDialog"
             class="w-full bg-red-500 mt-6 text-white py-2 hover:bg-red-600 rounded-3xl" />
 
-        <PrimeDialog v-model:visible="dialogVisible" header="Account löschen" :modal="true" closable>
-            <p>Möchtest du deinen Account wirklich löschen?</p>
-            <template #footer>
-                <PrimeButton label="Nein" @click="closeDialog" class="mr-2 bg-trolley-primary rounded-3xl" />
-                <PrimeButton label="Ja" severity="danger" @click="confirmDelete" autofocus
-                    class="bg-red-500 text-white rounded-3xl" />
+        <PrimeDialog v-model:visible="dialogVisible" header="Account löschen" modal class="rounded-3xl"
+            :pt="{ mask: { style: 'backdrop-filter: blur(2px)' } }" dismissable-mask>
+            <template #container="{ closeCallback }">
+                <div class="p-5 bg-gray-200 w-[400px] rounded-3xl">
+                    <p class="text-lg text-center mb-4">Möchtest du deinen Account wirklich löschen?</p>
+
+                    <div class="flex align-items-center gap-2 justify-center">
+                        <PrimeButton label="Ja" severity="danger" @click="confirmDelete"
+                            class="p-3 w-full text-white rounded-3xl" type="button" />
+                        <PrimeButton label="Nein" @click="closeDialog"
+                            class="p-3 w-full text-white bg-trolley-primary hover:bg-trolley-accent rounded-3xl" />
+                    </div>
+                </div>
             </template>
         </PrimeDialog>
+
     </div>
 </template>
 
@@ -197,5 +205,4 @@ function closeDialog() {
         max-width: 600px;
         margin: auto;
     }
-}
-</style>
+}</style>

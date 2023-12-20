@@ -57,15 +57,15 @@
     <PrimeDialog v-model:visible="isRoleDialogVisible" @hide="closeRoleDialog" modal class="rounded-3xl"
       :pt="{ mask: { style: 'backdrop-filter: blur(2px)' } }" dismissable-mask>
       <template #container="{ closeCallback }">
-        <div class="p-5 bg-gradient-to-r from-trolley-primary to-trolley-accent w-[400px] rounded-3xl">
+        <div class="p-5 bg-gray-200 w-[400px] rounded-3xl">
           <PrimeDropdown v-model="selectedRole" :options="rolesOptions" optionLabel="name" placeholder="Rolle auswählen"
             class="w-full mb-4 bg-white text-gray-700 rounded-3xl" />
 
           <div class="flex align-items-center gap-2">
             <PrimeButton label="Rolle aktualisieren" @click="updateUserRole"
               class="p-3 w-full text-white bg-trolley-primary hover:bg-trolley-accent rounded-3xl" type="button" />
-            <PrimeButton label="Abbrechen" @click="closeCallback"
-              class="p-3 w-full text-white bg-red-500 hover:bg-red-400 rounded-3xl" />
+            <PrimeButton label="Abbrechen" severity="danger" @click="closeCallback"
+              class="p-3 w-full text-white rounded-3xl" />
           </div>
         </div>
       </template>
@@ -140,7 +140,7 @@ const approve1Product = async (slotProps) => {
   if (slotProps && slotProps.data) {
     await adminStore.approve1Product(slotProps.data.id);
     await adminStore.loadTempProducts();
-    await toast.add({ severity: 'success', summary: 'Produkt freigegeben', group: 'auth', life: 3000 })
+    await toast.add({ severity: 'custom', summary: 'Produkt freigegeben', group: 'auth', life: 3000 })
   } else {
     console.error('slotProps oder slotProps.data ist undefined');
   }
