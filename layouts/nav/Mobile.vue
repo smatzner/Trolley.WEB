@@ -17,13 +17,13 @@ function toggleSearchField() {
 
 const visibleToolTip = ref(true)
 onMounted(() => {
-  if (visibleToolTip.value && !isLoggedIn.value) {
+  if (visibleToolTip.value && !isLoggedIn.value && !localStorage.getItem('shoppingList')) {
     toast.add({severity: 'custom', summary: 'Hier klicken, um Einkaufsliste zu erstellen', group: 'tooltip', life: 10000})
   }
 })
 
 watch(visibleToolTip, () => {
-  if(!visibleToolTip.value){
+  if (!visibleToolTip.value) {
     toast.remove({group: 'tooltip'})
   }
 })
