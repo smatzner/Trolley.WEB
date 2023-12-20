@@ -46,7 +46,7 @@ async function addProductToShoppingList() {
     isOrganic: organic.value,
     amount: amount.value
   }
-  // useAsyncData(async () => await productStore.addProductToShoppingList(selectedProduct.value, amount.value))
+
   useAsyncData(async () => await productStore.addProductToShoppingList(shoppingListProduct.value))
   selectedProduct.value = ''
   amount.value = 1
@@ -66,6 +66,7 @@ async function addProductToShoppingList() {
             placeholder="Produkt suchen"
             class="h-8 w-36"
             inputClass="text-sm w-36 rounded-2xl"
+            panelClass="rounded-3xl"
         />
         <PrimeInputNumber
             v-model="amount"
@@ -109,7 +110,8 @@ async function addProductToShoppingList() {
         </div>
       </div>
       <div v-if="$device.isMobile" class="flex mt-3">
-        <PrimeButton type="submit" label="Hinzufügen" class="bg-trolley-primary border-trolley-primary h-8 mx-auto rounded-3xl"/>
+        <PrimeButton type="submit" label="Hinzufügen"
+                     class="bg-trolley-primary border-trolley-primary h-8 mx-auto rounded-3xl"/>
       </div>
     </form>
   </div>

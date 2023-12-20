@@ -27,7 +27,7 @@ const errorDialog = ref(false)
                 @click="clearError({redirect: '/'})"
                 label="Bring mich zurück!"
                 size="small"
-                class="sm:w-full lg:w-auto my-2 px-8 text-center bg-trolley-primary text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-trolley-primary focus:ring-opacity-50"/>
+                class="sm:w-full lg:w-auto my-2 px-8 text-center bg-trolley-primary text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-trolley-primary focus:ring-opacity-50 rounded-3xl"/>
           </div>
         </div>
         <div>

@@ -3,8 +3,11 @@
 </script>
 
 <template>
-  <PrimeSidebar header="Produkt hinzufügen" position="bottom"
-                class="h-1/3 rounded-t-2xl">
+  <PrimeSidebar
+      header="Produkt hinzufügen"
+      position="bottom"
+      class="h-1/3 rounded-t-3xl"
+  >
     <div class="flex justify-center">
       <AddProductForm/>
     </div>

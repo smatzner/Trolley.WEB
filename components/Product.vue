@@ -50,7 +50,7 @@ function removeProductFromShoppingList() {
 
 <template>
   <PrimeButton
-      class="bg-trolley-primary flex-col text-white w-[6.25rem] aspect-square rounded-2xl"
+      class="bg-trolley-primary flex-col text-white w-[6.25rem] aspect-square rounded-3xl"
       @click="removeProductFromShoppingList()"
       @contextmenu="onRightClick">
     <Icon :name="'fa6-solid:'+ product.iconName" class="text-7xl"/>
@@ -60,13 +60,21 @@ function removeProductFromShoppingList() {
     <span class="text-xs mt-1">{{ product.amount }}</span>
   </PrimeButton>
 
-  <PrimeContextMenu ref="menu" :model="items">
+  <PrimeContextMenu ref="menu" :model="items" class="rounded-3xl">
     <template #item="{item, props}">
-      <PrimeInputNumber v-if="item.label === 'Anzahl'" v-model="product.amount" v-bind="props.action"
-                        inputId="horizontal-buttons2" showButtons buttonLayout="horizontal" :min="1" class="ms-2 me-12"
-                        inputClass="text-sm text-center w-10 h-8"
-                        decrementButtonClass="w-1/3 h-8 bg-trolley-primary  border-trolley-primary"
-                        incrementButtonClass="w-1/3 h-8 bg-trolley-primary border-trolley-primary">
+      <PrimeInputNumber
+          v-if="item.label === 'Anzahl'"
+          v-model="product.amount"
+          v-bind="props.action"
+          inputId="horizontal-buttons2"
+          showButtons
+          buttonLayout="horizontal"
+          :min="1"
+          class="ms-2 me-12"
+          inputClass="text-sm text-center w-10 h-8"
+          decrementButtonClass="w-1/3 h-8 bg-trolley-primary  border-trolley-primary"
+          incrementButtonClass="w-1/3 h-8 bg-trolley-primary border-trolley-primary"
+      >
         <template #decrementbuttonicon>-</template>
         <template #incrementbuttonicon>+</template>
       </PrimeInputNumber>

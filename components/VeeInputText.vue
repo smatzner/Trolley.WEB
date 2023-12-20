@@ -27,7 +27,7 @@ defineProps({
 
       <input
           v-bind="field"
-          class="p-3 rounded-md rounded-3xl"
+          class="p-3 rounded-3xl"
           :class="{
                     'border-orange-400' : !meta.valid && meta.touched
                   }"

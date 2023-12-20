@@ -1,5 +1,5 @@
 <template>
-  <PrimeMenubar :model="items">
+  <PrimeMenubar :model="items" class="rounded-3xl bg-white m-2 pl-5 border-0 shadow">
     <template #item="{item, props}">
       <a v-bind="props.action">{{ item.label }}</a>
     </template>

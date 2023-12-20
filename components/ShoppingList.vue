@@ -89,10 +89,18 @@ function updatePrice() {
     </template>
     <template #item="{item}">
       <PrimeInputGroup v-if="item.label === 'Gesamtkosten'">
-        <PrimeDropdown v-model="selectedMarket" optionValue="marketName" @change="updatePrice"
-                       class="w-32 rounded-l-3xl pl-2"
-                       :options="marketItems"
-                       optionLabel="marketName" text rounded raised></PrimeDropdown>
+        <PrimeDropdown
+            v-model="selectedMarket"
+            optionValue="marketName"
+            @change="updatePrice"
+            class="w-32 rounded-l-3xl pl-2"
+            :options="marketItems"
+            optionLabel="marketName"
+            text
+            rounded
+            raised
+            panelClass="rounded-3xl"
+        />
         <PrimeInputGroupAddon class="rounded-r-3xl">{{ totalPrice }} €</PrimeInputGroupAddon>
       </PrimeInputGroup>
       <PrimeButton
