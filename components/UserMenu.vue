@@ -17,6 +17,9 @@ const links = computed(() => {
     if (role.value === 'Admin') {
       items.push({label: 'Admin', route: '/admin'})
     }
+    if (role.value === 'ShopOwner' || role.value === 'Admin'){
+      items.push({label: 'Shop', route: '/user/shop'})
+    }
     items.push(
         {label: 'Profil', route: '/user/profile'},
         {label: 'Einkaufslisten', route: '/shoppinglists'},
