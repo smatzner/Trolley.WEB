@@ -5,13 +5,16 @@ definePageMeta({
 
 const file = ref()
 const BASE_URL = 'https://localhost:7124'
+
 const authStore = useAuthStore()
 const userId = computed(() => authStore.user.id)
 const marketName = ref()
+
 const isDragging = ref(false)
 
+const toast = useToast()
+
 async function submitUpload() {
-  console.log(file.value)
   let formData = new FormData()
   formData.append('userId', userId.value)
   formData.append('marketName', marketName.value)
@@ -24,12 +27,15 @@ async function submitUpload() {
       Authorization: localStorage.getItem('token')
     }
   })
+
+  toast.add({severity: 'custom', summary: 'Datei erfolgreich hochgeladen', group: 'auth', life: 2000})
+  file.value = null
+  marketName.value = ''
 }
 
 function dropFile(e: any) {
   isDragging.value = false
   file.value = e.dataTransfer.files[0]
-  console.log(file.value)
 }
 
 function dragOver() {
@@ -53,6 +59,7 @@ function chooseFile(e: any) {
           <PrimeInputText
               id="marketName"
               v-model="marketName"
+              class="rounded-3xl"
           />
           <label for="marketName">Marktname</label>
         </span>
@@ -60,7 +67,7 @@ function chooseFile(e: any) {
 
       <label
           for="dropzone-file"
-          class="mt-5 flex flex-col items-center justify-center w-full aspect-square border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+          class="mt-5 flex flex-col items-center justify-center w-full aspect-square border-2 border-gray-300 border-dashed rounded-3xl cursor-pointer bg-gray-50 hover:bg-gray-100"
           @drop.prevent="dropFile($event)"
           @dragover.prevent="dragOver"
           @dragleave="dragLeave"
@@ -104,9 +111,8 @@ function chooseFile(e: any) {
           type="submit"
           label="Hochladen"
           size="small"
-          class="float-right mt-5 bg-trolley-primary border-trolley-primary"
+          class="float-right mt-5 bg-trolley-primary border-trolley-primary rounded-3xl"
       />
-
     </form>
   </div>
 
