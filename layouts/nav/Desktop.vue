@@ -1,7 +1,13 @@
 <template>
-  <PrimeMenubar :model="items" class="rounded-3xl bg-white m-2 pl-5 border-0 shadow">
+  <PrimeMenubar
+      :model="links"
+      class="rounded-3xl bg-white m-2 pl-5 border-0 shadow"
+      :pt="{
+        content: {class: 'rounded-3xl'}
+      }"
+  >
     <template #item="{item, props}">
-      <a v-bind="props.action">{{ item.label }}</a>
+      <NuxtLink v-bind="props.action" :to="item.route">{{ item.label }}</NuxtLink>
     </template>
     <template #end>
       <PrimeButton text rounded severity="secondary" @click="visibleUserMenu = true" aria-haspopup="true"
@@ -21,19 +27,26 @@ const visibleUserMenu = ref(false)
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
+const role = computed(() => authStore.role)
 
 
-const items = computed(() => {
+const links = computed(() => {
+  let items = [
+    {label: 'Home', route: '/'}
+  ]
   if (isLoggedIn.value) {
-    return [
-      {label: 'Home', command: () => navigateTo('/')},
-      {label: 'Einkaufslisten', command: () => navigateTo('/shoppinglists')}
-    ]
-  } else {
-    return[
-        {label: 'Home', command: () => navigateTo('/')}
-    ]
+    if (role.value === 'Admin') {
+      items.push({label: 'Admin', route: '/admin'})
+    }
+    if (role.value === 'ShopOwner' || role.value === 'Admin') {
+      items.push({label: 'Shop', route: '/user/shop'})
+    }
+    items.push(
+        {label: 'Einkaufslisten', route: '/shoppinglists'},
+    )
   }
+
+  return items
 })
 
 
