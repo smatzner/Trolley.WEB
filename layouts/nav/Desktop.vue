@@ -3,7 +3,8 @@
       :model="links"
       class="rounded-3xl bg-white m-2 pl-5 border-0 shadow"
       :pt="{
-        content: {class: 'rounded-3xl'}
+        content: {class: 'rounded-3xl'},
+        menu: {class: 'rounded-3xl'}
       }"
   >
     <template #item="{item, props}">
