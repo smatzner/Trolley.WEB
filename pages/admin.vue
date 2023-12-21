@@ -5,6 +5,7 @@
       :rows="5"
       :rowsPerPageOptions="[5, 10, 20, 50]"
       tableStyle="min-width: 50rem"
+      row-hover
       :pt="{
           root: {class: 'rounded-3xl bg-white shadow-lg border-0 lg:w-5/6 mx-auto'},
           header: {class: 'bg-white rounded-t-3xl p-5 border-0'},
@@ -54,6 +55,7 @@
       :rows="5"
       :rowsPerPageOptions="[5, 10, 20, 50]"
       tableStyle="min-width: 50rem"
+      row-hover
       :pt="{
           root: {class: 'rounded-3xl bg-white mt-6 shadow-lg border-0 lg:w-5/6 mx-auto'},
           header: {class: 'bg-white rounded-t-3xl p-5 border-0'},
