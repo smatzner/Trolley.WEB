@@ -64,9 +64,13 @@ async function addProductToShoppingList() {
             :suggestions="filteredProducts"
             @complete="search"
             placeholder="Produkt suchen"
+            emptySearchMessage="Kein Ergebnis"
             class="h-8 w-36"
             inputClass="text-sm w-36 rounded-2xl"
             panelClass="rounded-3xl"
+            :pt="{
+              emptyMessage: {class: 'p-3 text-center'}
+            }"
         />
         <PrimeInputNumber
             v-model="amount"
